@@ -54,7 +54,7 @@ b) ```./leafcast``` run in current session
 | --- | --- |
 |```~/leafcast/logs```		| Log files |
 |```~/leafcast/photos```	| photo storage |
-|```~/leafcast/.env```		| enviromental variables, make sure in production mode! |
+|```~/leafcast/.env```		| enviromental variables |
 
 ## Build step for 64bit pi (pi zero 2 w, pi 4)
 
