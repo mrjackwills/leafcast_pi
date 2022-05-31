@@ -36,7 +36,7 @@ download (aarch64 one liner)
 
 ```bash
 wget https://www.github.com/mrjackwills/leafcast_pi/releases/latest/download/leafcast_linux_aarch64.tar.gz &&
-tar xzvf leafcast_aarch64.tar.gz leafcast
+tar xzvf leafcast_linux_aarch64.tar.gz leafcast
 ```
 
 ## Run step
