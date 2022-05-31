@@ -11,9 +11,7 @@
 </p>
 
 <p align="center">
-	Back end to the <a href='https://github.com/mrjackwills/leafcast_vue' target='_blank' rel='noopener noreferrer'>vue frontend website</a>
-	<br>
-	See the frontend Vue & Typescript site source <a href='https://www.github.com/mrjackwills/leafcast_vue' target='_blank' rel='noopener noreferrer'>here</a>
+	See the frontend site source <a href='https://www.github.com/mrjackwills/leafcast_vue' target='_blank' rel='noopener noreferrer'>here</a>
 </p>
 
 <p align="center">
