@@ -1,0 +1,38 @@
+[package]
+name = "leafcast"
+version = "0.0.1"
+edition = "2021"
+authors = ["Jack Wills <email@mrjackwills.com>"]
+description = "leafcast pi client"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+anyhow = "1.0.55"
+base64 = "0.13.0"
+clap={version="3.1.0", features = ["derive", "unicode"] }
+dotenv = "0.15.0"
+figlet-rs = "0.1.3"
+futures-util = "0.3.21"
+image = "0.24.1"
+openssl = { version = '0.10', features = ["vendored"] }
+reqwest = {version = "0.11.9", features=["json", "native-tls"]}
+serde = { version = "1.0.136", features = ["derive"] }
+serde_json = "1.0"
+sudo = "0.6.0"
+thiserror = "1.0.30"
+time = {version="0.3.7", features=["local-offset", "macros"]}
+time-tz = "1.0.1"
+tokio = {version ="1", features=["full"]}
+tokio-tungstenite={version= "0.17.1", features = ["native-tls"]}
+tracing = "0.1.32"
+tracing-subscriber = "0.3.9"
+users = "0.11.0"
+webp = "0.2.2"
+
+[profile.release]
+lto = true
+codegen-units = 1
+panic = 'abort'
+strip=true
+debug = false
