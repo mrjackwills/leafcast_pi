@@ -11,7 +11,7 @@
 </p>
 
 <p align="center">
-	Built in <a href='https://www.rust-lang.org/' target='_blank' rel='noopener noreferrer'>Rust</a>, with <a href='https://www.sqlite.org/' target='_blank' rel='noopener noreferrer'>SQLite</a>
+	Built in <a href='https://www.rust-lang.org/' target='_blank' rel='noopener noreferrer'>Rust</a>
 	<br>
 	<sub> See typescript branch for original, now not maintained, typescript version</sub>
 </p>
@@ -20,13 +20,18 @@
 	See the frontend website source <a href='https://www.github.com/mrjackwills/leafcast_vue' target='_blank' rel='noopener noreferrer'>here</a>
 </p>
 
+## Required Hardware
+
+1) Raspberry pi - designed for, tested, and fully working, a <a href='https://www.raspberrypi.com/products/raspberry-pi-zero-2-w/' target='_blank' rel='noopener noreferrer'>Raspbery pi zero w 2</a>
+2) Pi camera, such as <a href='https://www.raspberrypi.com/products/camera-module-v2/' target='_blank' rel='noopener noreferrer'>camera module</a>
+
 ## Required services
 
 1) <a href='https://www.staticpi.com/' target='_blank' rel='noopener noreferrer'>staticPi</a> - the simple and secure messaging service
 
 ## Required software
 
-1) libcamera-still
+1) <a href='https://github.com/raspberrypi/libcamera-apps' target='_blank' rel='noopener noreferrer'>libcamera-still</a> - should be pre-installed in recent Pi OS version
 
 ## Download
 
@@ -47,7 +52,6 @@ a) ```sudo ./leafcast -i``` create and install systemd service file, to automati
 
 b) ```./leafcast``` run in current session
 
-
 ## Suggested directories and file
 
 | directory | reason |
@@ -56,11 +60,16 @@ b) ```./leafcast``` run in current session
 |```~/leafcast/photos```	| photo storage |
 |```~/leafcast/.env```		| enviromental variables |
 
-## Build step for 64bit pi (pi zero 2 w, pi 4)
+## Build step
+
+### Raspberry pi 64bit pi (pi zero 2 w, pi 4)
+
+requires docker & <a href='https://github.com/cross-rs/cross' target='_blank' rel='noopener noreferrer'>cross-rs</a>
 
 1) ```cross build --target aarch64-unknown-linux-musl --release```
 
-
 ## Tests
+
+Testing is a work in progress
 
 ```cargo test -- --test-threads=1```
