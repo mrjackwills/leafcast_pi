@@ -87,7 +87,7 @@ impl WSSender {
         })
     }
 
-	#[allow(unused)]
+    #[allow(unused)]
     /// restart application by force quitting, assuming running as service or in an auto-restart container
     async fn restart(&mut self) {
         self.close().await;

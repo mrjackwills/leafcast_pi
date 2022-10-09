@@ -1,7 +1,6 @@
 use futures_util::Future;
-use image::io::Reader as ImageReader;
+use image::imageops::FilterType;
 use std::{
-    io::Cursor,
     pin::Pin,
     time::{Instant, SystemTime},
 };
@@ -146,29 +145,33 @@ impl Camera {
         let now = Instant::now();
 
         // let jpeg_encoder = image::load_from_memory_with_format(&original_photo.data, , image::ImageFormat::Jpeg)
-        let mut img = ImageReader::with_format(Cursor::new(buffer), image::ImageFormat::Jpeg);
-        // let mut image = image::load_from_memory_with_format(buffer, image::ImageFormat::Jpeg)
-        // .decode()
-        // .unwrap_or_default();
+        // let mut img = ImageReader::with_format(Cursor::new(buffer), image::ImageFormat::Jpeg);
+        match image::load_from_memory_with_format(buffer, image::ImageFormat::Jpeg) {
+            Ok(mut image) => {
+                let dimensions = Dimension::Small.get_dimensions();
+                image = image.resize(dimensions.width, dimensions.height, FilterType::Nearest);
+                let resize = format!("resize took: {}ms", now.elapsed().as_millis());
+                trace!(%resize);
 
-        let dimensions = Dimension::Small.get_dimensions();
-        // img = img.resize(dimensions.width, dimensions.height, FilterType::Nearest);
-        let resize = format!("resize took: {}ms", now.elapsed().as_millis());
-        trace!(%resize);
-
-        // match Encoder::from_image(&img) {
-        //     Ok(encoder) => {
-        //         let photo_webp = encoder.encode(85f32).to_vec();
-        //         let encode_time = format!("webp encode: {}ms", now.elapsed().as_millis());
-        //         trace!(%encode_time);
-        //         self.file_size.converted = photo_webp.len();
-        //         self.image_webp = photo_webp;
-        //     }
-        //     Err(e) => {
-        //         error!(%e);
-        //         error!("webp encoder error")
-        //     }
-        // };
+                match Encoder::from_image(&image) {
+                    Ok(encoder) => {
+                        let photo_webp = encoder.encode(85f32).to_vec();
+                        let encode_time = format!("webp encode: {}ms", now.elapsed().as_millis());
+                        trace!(%encode_time);
+                        self.file_size.converted = photo_webp.len();
+                        self.image_webp = photo_webp;
+                    }
+                    Err(e) => {
+                        error!(%e);
+                        error!("webp encoder error")
+                    }
+                };
+            }
+            Err(e) => {
+                println!("{:?}", e);
+                println!("todo");
+            }
+        }
     }
 
     /// Take a photo, and update self.web with that new photo

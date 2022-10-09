@@ -4,7 +4,7 @@ use thiserror::Error;
 pub enum AppError {
     #[error("'{0}' - file not found'")]
     FileNotFound(String),
-	#[error("IO Error")]
+    #[error("IO Error")]
     IOError(#[from] std::io::Error),
     #[error("missing env: '{0}'")]
     MissingEnv(String),
@@ -12,7 +12,7 @@ pub enum AppError {
     Offset(#[from] time::error::ComponentRange),
     #[error("Reqwest Error")]
     Reqwest(#[from] reqwest::Error),
-	#[error("Unable to set up tracing")]
+    #[error("Unable to set up tracing")]
     Tracing,
     #[error("WS Connect")]
     TungsteniteConnect(#[from] tokio_tungstenite::tungstenite::Error),

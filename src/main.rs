@@ -18,7 +18,6 @@ mod word_art;
 mod ws;
 mod ws_messages;
 
-
 use app_error::AppError;
 use camera::Camera;
 use cron::Croner;
@@ -26,8 +25,8 @@ use env::AppEnv;
 use parse_cli::CliArgs;
 use std::sync::Arc;
 use tokio::sync::Mutex;
-use tracing_subscriber::{fmt, prelude::__tracing_subscriber_SubscriberExt};
 use tracing::Level;
+use tracing_subscriber::{fmt, prelude::__tracing_subscriber_SubscriberExt};
 use word_art::Intro;
 use ws::open_connection;
 
@@ -63,7 +62,7 @@ fn setup_tracing(app_envs: &AppEnv) -> Result<(), AppError> {
 }
 
 #[tokio::main]
-async fn main() -> Result<(), AppError>{
+async fn main() -> Result<(), AppError> {
     let app_envs = AppEnv::get();
     let cli = CliArgs::new();
     setup_tracing(&app_envs)?;
@@ -72,5 +71,5 @@ async fn main() -> Result<(), AppError>{
     let camera = Arc::new(Mutex::new(Camera::init(&app_envs).await));
     Croner::init(Arc::clone(&camera)).await;
     open_connection(app_envs, camera).await;
-	Ok(())
+    Ok(())
 }
