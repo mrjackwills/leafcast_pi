@@ -1,4 +1,3 @@
-use dotenv::dotenv;
 use std::{collections::HashMap, env, time::SystemTime};
 use time::UtcOffset;
 use time_tz::{timezones, Offset, TimeZone};
@@ -10,8 +9,7 @@ type EnvHashMap = HashMap<String, String>;
 #[derive(Debug, Clone)]
 pub struct AppEnv {
     pub trace: bool,
-    pub location_log_combined: String,
-    pub location_log_error: String,
+    pub location_log: String,
     pub location_ip_address: String,
     pub location_images: String,
     pub rotation: u16,
@@ -91,9 +89,7 @@ impl AppEnv {
             debug: Self::parse_boolean("DEBUG", &env_map),
             // TODO location exists!
             location_images: Self::parse_string("LOCATION_IMAGES", &env_map)?,
-            location_log_combined: Self::parse_string("LOCATION_LOG_COMBINED", &env_map)?,
-            location_log_error: Self::parse_string("LOCATION_LOG_ERROR", &env_map)?,
-            // TODO location exists!
+            location_log: Self::check_file_exists(Self::parse_string("LOCATION_LOG", &env_map)?)?,
             location_ip_address: Self::check_file_exists(Self::parse_string(
                 "LOCATION_IP_ADDRESS",
                 &env_map,
@@ -111,7 +107,7 @@ impl AppEnv {
     }
 
     pub fn get() -> Self {
-        dotenv().ok();
+        dotenvy::dotenv().ok();
         match Self::generate() {
             Ok(s) => s,
             Err(e) => {
@@ -340,7 +336,7 @@ mod tests {
     #[test]
     fn env_return_appenv() {
         // FIXTURES
-        dotenv().ok();
+        dotenvy::dotenv().ok();
 
         // ACTION
         let result = AppEnv::generate();

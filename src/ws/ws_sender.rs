@@ -4,7 +4,6 @@ use std::process;
 use std::sync::Arc;
 use std::time::Instant;
 use time::OffsetDateTime;
-use tokio_tungstenite::{self, tungstenite::Message};
 use tracing::{error, trace};
 
 use base64::encode as to_b64;
@@ -88,16 +87,7 @@ impl WSSender {
         })
     }
 
-    /// Handle websocket close event
-    pub async fn ping(self) {
-        self.writer
-            .lock()
-            .await
-            .send(Message::Pong(vec![]))
-            .await
-            .unwrap_or(());
-    }
-
+	#[allow(unused)]
     /// restart application by force quitting, assuming running as service or in an auto-restart container
     async fn restart(&mut self) {
         self.close().await;

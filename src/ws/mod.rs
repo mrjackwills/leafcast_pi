@@ -12,7 +12,7 @@ use futures_util::{
 use std::sync::Arc;
 use tokio::{net::TcpStream, sync::Mutex as TokioMutex};
 use tokio_tungstenite::{self, tungstenite::Message, MaybeTlsStream, WebSocketStream};
-use tracing::{error, info, trace};
+use tracing::{error, info};
 
 use crate::{camera::Camera, env::AppEnv};
 

@@ -1,10 +1,9 @@
 use std::time::Instant;
 
-use anyhow::Result;
 use serde::{Deserialize, Serialize};
 use tokio::fs::read_to_string;
 
-use crate::env::AppEnv;
+use crate::{env::AppEnv, app_error::AppError};
 
 #[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct SysInfo {
@@ -18,7 +17,7 @@ pub struct SysInfo {
 }
 
 impl SysInfo {
-    async fn get_file_info(app_envs: &AppEnv) -> Result<(u64, u32)> {
+    async fn get_file_info(app_envs: &AppEnv) -> Result<(u64, u32), AppError> {
         let mut total_file_size = 0;
         let mut count = 0;
 
@@ -92,8 +91,7 @@ mod tests {
             debug: true,
             location_images: String::from("photos"),
             location_ip_address,
-            location_log_combined: na.clone(),
-            location_log_error: na.clone(),
+            location_log: na.clone(),
             rotation: 0,
             start_time: SystemTime::now(),
             timezone: "America/New_York".to_owned(),

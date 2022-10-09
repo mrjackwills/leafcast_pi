@@ -1,4 +1,3 @@
-use anyhow::Result;
 use std::fs;
 use std::os::unix::fs::PermissionsExt;
 use std::path::Path;
@@ -6,6 +5,7 @@ use std::process::Command;
 use std::{env, io::Write};
 use tracing::{error, info};
 
+use crate::app_error::AppError;
 use crate::parse_cli::CliArgs;
 
 const SC: &str = "systemctl";
@@ -53,7 +53,7 @@ fn get_user_name() -> String {
 }
 
 /// Check if unit file in systemd, and delete if true
-fn uninstall_service() -> Result<()> {
+fn uninstall_service() -> Result<(), AppError> {
     let service = get_service_name();
 
     // check if file exits first
@@ -83,9 +83,7 @@ fn get_dot_service() -> String {
     format!("/etc/systemd/system/{service}")
 }
 
-fn create_service_file(user_name: &str) -> Result<String> {
-    // todo handle error
-
+fn create_service_file(user_name: &str) -> Result<String, AppError> {
     let current_dir = env::current_dir()?.display().to_string();
     Ok(format!(
         "[Unit]
@@ -109,7 +107,7 @@ WantedBy=multi-user.target
     ))
 }
 /// If is sudo, and able to get a user name (which isn't root), install leafcast as a service
-fn install_service() -> Result<()> {
+fn install_service() -> Result<(), AppError> {
     let user_name = get_user_name();
 
     let dot_service = create_service_file(&user_name);
