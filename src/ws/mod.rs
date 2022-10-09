@@ -46,7 +46,7 @@ async fn incoming_ws_message(mut reader: WSReader, mut ws_sender: WSSender) {
 // need to spawn a new receiver on each connect
 /// try to open WS connection, and spawn a ThreadChannel message handler
 pub async fn open_connection(app_envs: AppEnv, camera: Arc<TokioMutex<Camera>>) {
-    let mut connection_details = ConnectionDetails::new();
+    let mut connection_details = ConnectionDetails::default();
     loop {
         info!("in connection loop, awaiting delay then try to connect");
         connection_details.reconnect_delay().await;

@@ -19,7 +19,7 @@ impl Croner {
     async fn init_loop(&self, camera: Arc<Mutex<Camera>>) {
         // wait til now.second is 0
         let wait_for =
-            || std::time::Duration::from_secs(60 - OffsetDateTime::now_utc().second() as u64);
+            || std::time::Duration::from_secs(60 - u64::from(OffsetDateTime::now_utc().second()));
 
         tokio::time::sleep(wait_for()).await;
         // some issue here?

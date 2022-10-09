@@ -1,17 +1,11 @@
 use dotenv::dotenv;
 use std::{collections::HashMap, env, time::SystemTime};
-use thiserror::Error;
 use time::UtcOffset;
 use time_tz::{timezones, Offset, TimeZone};
 
+use crate::app_error::AppError;
+
 type EnvHashMap = HashMap<String, String>;
-
-#[derive(Debug, Error)]
-
-enum EnvError {
-    #[error("missing env: '{0}'")]
-    NotFound(String),
-}
 
 #[derive(Debug, Clone)]
 pub struct AppEnv {
@@ -27,11 +21,18 @@ pub struct AppEnv {
     pub utc_offset: UtcOffset,
     pub ws_address: String,
     pub ws_apikey: String,
-    pub ws_auth_address: String,
+    pub ws_token_address: String,
     pub ws_password: String,
 }
 
 impl AppEnv {
+    fn check_file_exists(filename: String) -> Result<String, AppError> {
+        match std::fs::metadata(&filename) {
+            Ok(_) => Ok(filename),
+            Err(_) => Err(AppError::FileNotFound(filename)),
+        }
+    }
+
     /// Parse "true" or "false" to bool, else false
     fn parse_boolean(key: &str, map: &EnvHashMap) -> bool {
         match map.get(key) {
@@ -41,21 +42,21 @@ impl AppEnv {
     }
 
     /// Return offset for given timezone, else utc
-    fn parse_offset(map: &EnvHashMap) -> UtcOffset {
+    fn parse_offset(map: &EnvHashMap) -> Result<UtcOffset, AppError> {
         if let Some(data) = map.get("TIMEZONE") {
             if let Some(value) = timezones::get_by_name(data) {
-                return value
+                return Ok(value
                     .get_offset_utc(&time::OffsetDateTime::now_utc())
-                    .to_utc();
+                    .to_utc());
             }
         }
-        UtcOffset::from_hms(0, 0, 0).unwrap()
+        Ok(UtcOffset::from_hms(0, 0, 0)?)
     }
 
-    fn parse_string(key: &str, map: &EnvHashMap) -> Result<String, EnvError> {
+    fn parse_string(key: &str, map: &EnvHashMap) -> Result<String, AppError> {
         match map.get(key) {
             Some(value) => Ok(value.into()),
-            None => Err(EnvError::NotFound(key.into())),
+            None => Err(AppError::MissingEnv(key.into())),
         }
     }
 
@@ -63,7 +64,7 @@ impl AppEnv {
     fn parse_timezone(map: &EnvHashMap) -> String {
         if let Some(data) = map.get("TIMEZONE") {
             if timezones::get_by_name(data).is_some() {
-                return data.to_owned();
+                return data.clone();
             }
         }
         "Etc/UTC".to_owned()
@@ -80,7 +81,7 @@ impl AppEnv {
     }
 
     /// Load, and parse .env file, return AppEnv
-    fn generate() -> Result<Self, EnvError> {
+    fn generate() -> Result<Self, AppError> {
         let env_map = env::vars()
             .into_iter()
             .map(|i| (i.0, i.1))
@@ -93,22 +94,25 @@ impl AppEnv {
             location_log_combined: Self::parse_string("LOCATION_LOG_COMBINED", &env_map)?,
             location_log_error: Self::parse_string("LOCATION_LOG_ERROR", &env_map)?,
             // TODO location exists!
-            location_ip_address: Self::parse_string("LOCATION_IP_ADDRESS", &env_map)?,
+            location_ip_address: Self::check_file_exists(Self::parse_string(
+                "LOCATION_IP_ADDRESS",
+                &env_map,
+            )?)?,
             rotation: Self::parse_rotation(&env_map),
             start_time: SystemTime::now(),
             timezone: Self::parse_timezone(&env_map),
             trace: Self::parse_boolean("TRACE", &env_map),
-            utc_offset: Self::parse_offset(&env_map),
+            utc_offset: Self::parse_offset(&env_map)?,
             ws_address: Self::parse_string("WS_ADDRESS", &env_map)?,
             ws_apikey: Self::parse_string("WS_APIKEY", &env_map)?,
-            ws_auth_address: Self::parse_string("WS_AUTH_ADDRESS", &env_map)?,
+            ws_token_address: Self::parse_string("WS_TOKEN_ADDRESS", &env_map)?,
             ws_password: Self::parse_string("WS_PASSWORD", &env_map)?,
         })
     }
 
     pub fn get() -> Self {
         dotenv().ok();
-        match AppEnv::generate() {
+        match Self::generate() {
             Ok(s) => s,
             Err(e) => {
                 println!("\n\x1b[31m{}\x1b[0m\n", e);
@@ -122,6 +126,7 @@ impl AppEnv {
 ///
 /// cargo watch -q -c -w src/ -x 'test env_ -- --nocapture'
 #[cfg(test)]
+#[allow(clippy::unwrap_used)]
 mod tests {
     use super::*;
 
@@ -178,7 +183,7 @@ mod tests {
         map.insert("TIMEZONE".to_owned(), "America/New_York".to_owned());
 
         // ACTION
-        let result = AppEnv::parse_offset(&map);
+        let result = AppEnv::parse_offset(&map).unwrap();
 
         // CHECK
         assert_eq!(result, UtcOffset::from_hms(-4, 0, 0).unwrap());
@@ -188,7 +193,7 @@ mod tests {
         map.insert("TIMEZONE".to_owned(), "Europe/Berlin".to_owned());
 
         // ACTION
-        let result = AppEnv::parse_offset(&map);
+        let result = AppEnv::parse_offset(&map).unwrap();
 
         // CHECK
         assert_eq!(result, UtcOffset::from_hms(2, 0, 0).unwrap());
@@ -197,10 +202,10 @@ mod tests {
         let map = HashMap::new();
 
         // ACTION
-        let result = AppEnv::parse_offset(&map);
+        let result = AppEnv::parse_offset(&map).unwrap();
 
         // CHECK
-        assert_eq!(result, UtcOffset::from_hms(0, 0, 0).unwrap())
+        assert_eq!(result, UtcOffset::from_hms(0, 0, 0).unwrap());
     }
 
     #[test]
@@ -211,17 +216,17 @@ mod tests {
         map.insert("TIMEZONE".to_owned(), "america/New_York".to_owned());
 
         // ACTION
-        let result = AppEnv::parse_offset(&map);
+        let result = AppEnv::parse_offset(&map).unwrap();
         // CHECK
         assert_eq!(result, UtcOffset::from_hms(0, 0, 0).unwrap());
 
         // No timezone present
         // FIXTURES
         let map = HashMap::new();
-        let result = AppEnv::parse_offset(&map);
+        let result = AppEnv::parse_offset(&map).unwrap();
 
         // CHECK
-        assert_eq!(result, UtcOffset::from_hms(0, 0, 0).unwrap())
+        assert_eq!(result, UtcOffset::from_hms(0, 0, 0).unwrap());
     }
     #[test]
     fn env_parse_rotation_ok() {

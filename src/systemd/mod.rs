@@ -15,7 +15,7 @@ enum Code {
     Valid,
     Invalid,
 }
-fn exit(message: &str, code: Code) {
+fn exit(message: &str, code: &Code) {
     match code {
         Code::Valid => {
             info!(message);
@@ -31,7 +31,7 @@ fn exit(message: &str, code: Code) {
 fn check_sudo() {
     match sudo::check() {
         sudo::RunningAs::Root => (),
-        _ => exit("not running as sudo", Code::Invalid),
+        _ => exit("not running as sudo", &Code::Invalid),
     }
 }
 
@@ -39,15 +39,15 @@ fn get_user_name() -> String {
     let mut user_name: Option<String> = None;
     for i in env::vars() {
         if i.0 == "SUDO_USER" {
-            user_name = Some(i.1)
+            user_name = Some(i.1);
         }
     }
     if user_name.is_none() {
-        exit("unable to get username", Code::Invalid);
+        exit("unable to get username", &Code::Invalid);
     }
     let user_name = user_name.unwrap_or_default();
     if user_name == "ROOT" {
-        exit("invalid username", Code::Invalid);
+        exit("invalid username", &Code::Invalid);
     }
     user_name
 }
@@ -141,17 +141,17 @@ fn install_service() -> Result<()> {
 }
 
 /// if cli argument provided, (un)install service in systemd
-pub fn check(cli: CliArgs) {
+pub fn check(cli: &CliArgs) {
     if cli.install {
         check_sudo();
         uninstall_service()
-            .unwrap_or_else(|_| exit("uninstall old service failure", Code::Invalid));
-        install_service().unwrap_or_else(|_| exit("install failure", Code::Invalid));
-        exit("Installed service", Code::Valid);
+            .unwrap_or_else(|_| exit("uninstall old service failure", &Code::Invalid));
+        install_service().unwrap_or_else(|_| exit("install failure", &Code::Invalid));
+        exit("Installed service", &Code::Valid);
     } else if cli.uninstall {
         check_sudo();
         uninstall_service()
-            .unwrap_or_else(|_| exit("uninstall old service failure", Code::Invalid));
-        exit("Uninstalled service", Code::Valid);
+            .unwrap_or_else(|_| exit("uninstall old service failure", &Code::Invalid));
+        exit("Uninstalled service", &Code::Valid);
     }
 }
