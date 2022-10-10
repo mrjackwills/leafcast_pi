@@ -20,6 +20,12 @@
 	See the frontend website source <a href='https://www.github.com/mrjackwills/leafcast_vue' target='_blank' rel='noopener noreferrer'>here</a>
 </p>
 
+<p align="center">
+	<a href="https://raw.githubusercontent.com/mrjackwills/leafcast_vue/main/.github/pi_cam.jpg" target='_blank' rel='noopener noreferrer'>
+		<img src='./.github/pi_cam.jpg' width='75%'/>
+	</a>
+</p>
+
 ## Required Hardware
 
 1) Raspberry pi - designed for, tested, and fully working, on a <a href='https://www.raspberrypi.com/products/raspberry-pi-zero-2-w/' target='_blank' rel='noopener noreferrer'>Raspbery pi zero w 2</a>
@@ -59,6 +65,20 @@ b) ```./leafcast``` run in current session
 |```~/leafcast/logs```		| Log files |
 |```~/leafcast/photos```	| photo storage |
 |```~/leafcast/.env```		| enviromental variables |
+|```/ramdrive/ip.addr```		| ip address |
+
+```bash
+# addition to /etc/fstab
+ramdrive /ramdrive tmpfs defaults,noatime,size=128K     0       0
+```
+suggested crontab
+
+```bash
+@reboot ip addr show wlan0 | grep -Po 'inet \K[\d.]+' > /ramdrive/ip.addr
+*/5 * * * * ip addr show wlan0 | grep -Po 'inet \K[\d.]+' > /ramdrive/ip.addr
+```
+ip address gets updated every 5 minutes, so write to a ramdrive rather than causing repetitive, eventually damaging, writes to the pi's SD card
+
 
 ## Build step
 

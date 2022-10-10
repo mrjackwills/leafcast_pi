@@ -31,22 +31,19 @@ pub enum ErrorData {
 
 pub fn to_struct(input: &str) -> Option<MessageValues> {
     let user_serialized = serde_json::from_str::<StructuredMessage>(input);
-    match user_serialized {
-        Ok(data) => {
-            if let Some(message) = data.error {
-                return Some(MessageValues::Invalid(message));
-            }
-            if let Some(message) = data.data {
-                return Some(MessageValues::Valid(message, data.unique));
-            }
-            None
+    if let Ok(data) = user_serialized {
+        if let Some(message) = data.error {
+            return Some(MessageValues::Invalid(message));
         }
-        Err(_) => {
-            let error_serialized = serde_json::from_str::<ErrorData>(input);
-            match error_serialized {
-                Ok(data) => Some(MessageValues::Invalid(data)),
-                Err(_) => None,
-            }
+        if let Some(message) = data.data {
+            return Some(MessageValues::Valid(message, data.unique));
+        }
+        None
+    } else {
+        let error_serialized = serde_json::from_str::<ErrorData>(input);
+        match error_serialized {
+            Ok(data) => Some(MessageValues::Invalid(data)),
+            Err(_) => None,
         }
     }
 }
@@ -55,6 +52,7 @@ pub fn to_struct(input: &str) -> Option<MessageValues> {
 ///
 /// cargo watch -q -c -w src/ -x 'test message_incoming -- --test-threads=1 --nocapture'
 #[cfg(test)]
+#[allow(clippy::unwrap_used)]
 mod tests {
     use super::*;
 
