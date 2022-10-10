@@ -87,8 +87,7 @@ impl AppEnv {
 
         Ok(Self {
             debug: Self::parse_boolean("DEBUG", &env_map),
-            // TODO location exists!
-            location_images: Self::parse_string("LOCATION_IMAGES", &env_map)?,
+            location_images: Self::check_file_exists(Self::parse_string("LOCATION_IMAGES", &env_map)?)?,
             location_log: Self::check_file_exists(Self::parse_string("LOCATION_LOG", &env_map)?)?,
             location_ip_address: Self::check_file_exists(Self::parse_string(
                 "LOCATION_IP_ADDRESS",
