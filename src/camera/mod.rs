@@ -2,6 +2,7 @@ use futures_util::Future;
 use image::imageops::FilterType;
 use std::{
     pin::Pin,
+    sync::atomic::{AtomicBool, Ordering},
     time::{Instant, SystemTime},
 };
 use time::{OffsetDateTime, UtcOffset};
@@ -53,7 +54,7 @@ impl Dimension {
 
 #[derive(Debug)]
 pub struct Camera {
-    in_use: bool,
+    in_use: AtomicBool,
     image_webp: Vec<u8>,
     image_timestamp: SystemTime,
     file_size: FileSize,
@@ -67,7 +68,7 @@ impl Camera {
     /// Setup camera, take a photo immediately in order to fill values instead of using Option<T>
     pub async fn init(app_envs: &AppEnv) -> Self {
         let mut camera = Self {
-            in_use: false,
+            in_use: AtomicBool::new(false),
             image_webp: vec![],
             image_timestamp: SystemTime::now(),
             file_size: FileSize::new(),
@@ -87,18 +88,12 @@ impl Camera {
         Box::pin(async move {
             // issue with this?
             // maybe include a counter so that it will only try 10 times?
-            if self.in_use {
-                // if self.retry_count < 10 {
+            if self.in_use.load(Ordering::SeqCst) {
                 tokio::time::sleep(std::time::Duration::from_millis(100)).await;
-                // self.retry_count += 1;
                 return Self::photograph(self).await;
-                // } else {
-                // self.retry_count = 0;
-                // self.in_use = false?;
-                // }
             }
             debug!("Taking photo");
-            self.in_use = true;
+            self.in_use.store(true, Ordering::SeqCst);
             let dimensions = Dimension::Big.get_dimensions();
             self.image_timestamp = SystemTime::now();
             let buffer = match Command::new("libcamera-still")
@@ -122,13 +117,12 @@ impl Camera {
                 Ok(output) => output.stdout,
                 Err(e) => {
                     error!(%e);
-                    error!("libcamera-still errror");
                     vec![]
                 }
             };
             debug!("Photo taken");
             self.file_size.original = buffer.len();
-            self.in_use = false;
+            self.in_use.store(false, Ordering::SeqCst);
             self.retry_count = 0;
             buffer
         })
@@ -168,8 +162,7 @@ impl Camera {
                 };
             }
             Err(e) => {
-                println!("{:?}", e);
-                println!("todo");
+                error!("{:?}", e);
             }
         }
     }
@@ -212,14 +205,9 @@ impl Camera {
         );
         if self.get_size_converted() > 15000 {
             let file_name = format!("{}/{}.jpg", self.location_images, file_name);
-            match fs::write(file_name, photo).await {
-                Ok(_) => {
-                    trace!("image saved");
-                }
-                Err(e) => {
-                    error!(%e);
-                    error!("Error saving to disk");
-                }
+            if let Err(e) = fs::write(file_name, photo).await {
+                error!(%e);
+                error!("Error saving to disk");
             }
         }
     }
