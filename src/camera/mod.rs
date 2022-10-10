@@ -157,7 +157,7 @@ impl Camera {
                     }
                     Err(e) => {
                         error!(%e);
-                        error!("webp encoder error")
+                        error!("webp encoder error");
                     }
                 };
             }

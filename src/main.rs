@@ -38,7 +38,7 @@ fn setup_tracing(app_envs: &AppEnv) -> Result<(), AppError> {
     } else {
         Level::INFO
     };
-    let logfile = tracing_appender::rolling::never(&app_envs.location_log, "api.log");
+    let logfile = tracing_appender::rolling::never(&app_envs.location_log, "leafcast.log");
 
     let log_fmt = fmt::Layer::default()
         .json()
