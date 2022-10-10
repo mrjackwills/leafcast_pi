@@ -19,7 +19,7 @@ struct FileSize {
 }
 
 impl FileSize {
-    const fn new() -> Self {
+    const fn default() -> Self {
         Self {
             original: 0,
             converted: 0,
@@ -71,7 +71,7 @@ impl Camera {
             in_use: AtomicBool::new(false),
             image_webp: vec![],
             image_timestamp: SystemTime::now(),
-            file_size: FileSize::new(),
+            file_size: FileSize::default(),
             rotation: app_envs.rotation.to_string(),
             retry_count: 0,
             utc_offset: app_envs.utc_offset,
@@ -96,7 +96,7 @@ impl Camera {
             self.in_use.store(true, Ordering::SeqCst);
             let dimensions = Dimension::Big.get_dimensions();
             self.image_timestamp = SystemTime::now();
-            let buffer = match Command::new("libcamera-still")
+            let buffer = Command::new("libcamera-still")
                 .args([
                     "-q",
                     "95",
@@ -112,14 +112,10 @@ impl Camera {
                     "-",
                 ])
                 .output()
-                .await
-            {
-                Ok(output) => output.stdout,
-                Err(e) => {
-                    error!(%e);
-                    vec![]
-                }
-            };
+                .await.map_or_else(|e|{
+					error!("{:?}", e);
+					vec![]
+				}, |o|o.stdout);
             debug!("Photo taken");
             self.file_size.original = buffer.len();
             self.in_use.store(false, Ordering::SeqCst);
@@ -138,15 +134,11 @@ impl Camera {
     fn convert_to_webp(&mut self, buffer: &[u8]) {
         let now = Instant::now();
 
-        // let jpeg_encoder = image::load_from_memory_with_format(&original_photo.data, , image::ImageFormat::Jpeg)
-        // let mut img = ImageReader::with_format(Cursor::new(buffer), image::ImageFormat::Jpeg);
         match image::load_from_memory_with_format(buffer, image::ImageFormat::Jpeg) {
             Ok(mut image) => {
                 let dimensions = Dimension::Small.get_dimensions();
                 image = image.resize(dimensions.width, dimensions.height, FilterType::Nearest);
-                let resize = format!("resize took: {}ms", now.elapsed().as_millis());
-                trace!(%resize);
-
+                trace!("resize took: {}ms", now.elapsed().as_millis());
                 match Encoder::from_image(&image) {
                     Ok(encoder) => {
                         let photo_webp = encoder.encode(85f32).to_vec();
@@ -190,10 +182,12 @@ impl Camera {
         self.file_size.original
     }
 
+	/// get the filesize of the original and onverted image
     pub const fn get_sizes(&self) -> (usize, usize) {
         (self.get_size_converted(), self.get_size_original())
     }
 
+	/// Save the photo to disk
     pub async fn save_to_disk(&mut self, photo: Vec<u8>) {
         let date_time = OffsetDateTime::from(self.get_timestamp()).to_offset(self.utc_offset);
         let file_name = format!(

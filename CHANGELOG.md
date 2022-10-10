@@ -15,8 +15,6 @@
 + WS message handler, [4ee8b784ec5682d7581a931138caa20a389f424c]
 + use global AppError, [91de86c06defd4ce0a76a138969c6c979277935f]
 
-
-
 # <a href='https://github.com/mrjackwills/leafcast_pi/releases/tag/v0.0.1'>v0.0.1</a>
 ### 2022-05-31
 

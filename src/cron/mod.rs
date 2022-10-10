@@ -22,13 +22,13 @@ impl Croner {
             || std::time::Duration::from_secs(60 - u64::from(OffsetDateTime::now_utc().second()));
 
         tokio::time::sleep(wait_for()).await;
-        // some issue here?
         loop {
             let now = OffsetDateTime::now_utc();
             if now.minute() % 5 == 0 {
                 let photo = camera.lock().await.take_photo().await;
                 camera.lock().await.save_to_disk(photo).await;
             }
+			// Should I not just wait 60 seconds here?
             tokio::time::sleep(wait_for()).await;
         }
     }

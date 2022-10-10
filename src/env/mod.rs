@@ -8,19 +8,19 @@ type EnvHashMap = HashMap<String, String>;
 
 #[derive(Debug, Clone)]
 pub struct AppEnv {
-    pub trace: bool,
-    pub location_log: String,
-    pub location_ip_address: String,
-    pub location_images: String,
-    pub rotation: u16,
     pub debug: bool,
+    pub location_images: String,
+    pub location_ip_address: String,
+    pub location_log: String,
+    pub rotation: u16,
     pub start_time: SystemTime,
     pub timezone: String,
+    pub trace: bool,
     pub utc_offset: UtcOffset,
     pub ws_address: String,
     pub ws_apikey: String,
-    pub ws_token_address: String,
     pub ws_password: String,
+    pub ws_token_address: String,
 }
 
 impl AppEnv {
