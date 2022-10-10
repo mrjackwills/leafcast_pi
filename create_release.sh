@@ -179,12 +179,20 @@ cargo_test () {
 	ask_continue
 }
 
+# Build output as github action would
+cargo_build () {
+	cross build --target aarch64-unknown-linux-musl --release
+	cross build --target arm-unknown-linux-musleabihf --release
+	ask_continue
+}
+
 # Full flow to create a new release
 release_flow() {
 	check_git
 	get_git_remote_url
 	cargo fmt
 	cargo_test
+	cargo_build
 	cd "${CWD}" || error_close "Can't find ${CWD}"
 	check_tag
 	
@@ -230,7 +238,7 @@ main() {
 				exit
 				break;;
 			1)
-				cargo_build_all
+				cargo_build
 				main
 				break;;
 			2)
