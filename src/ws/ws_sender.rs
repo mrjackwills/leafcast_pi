@@ -4,7 +4,6 @@ use std::process;
 use std::sync::Arc;
 use std::time::Instant;
 use time::OffsetDateTime;
-use tokio_tungstenite::{self, tungstenite::Message};
 use tracing::{error, trace};
 
 use base64::encode as to_b64;
@@ -43,8 +42,8 @@ impl WSSender {
     }
 
     /// Handle text message, in this program they will all be json text
-    pub async fn on_text(&mut self, message: &str) {
-        if let Some(data) = to_struct(message) {
+    pub async fn on_text(&mut self, message: String) {
+        if let Some(data) = to_struct(&message) {
             match data {
                 MessageValues::Invalid(error) => error!("{:?}", error),
                 MessageValues::Valid(data, unique) => match data {
@@ -88,21 +87,12 @@ impl WSSender {
         })
     }
 
-    /// Handle websocket close event
-    pub async fn ping(self) {
-        self.writer
-            .lock()
-            .await
-            .send(Message::Pong(vec![]))
-            .await
-            .unwrap_or(());
-    }
-
+    #[allow(unused)]
     /// restart application by force quitting, assuming running as service or in an auto-restart container
-    // async fn restart(&mut self) {
-    //     self.close().await;
-    //     process::exit(0);
-    // }
+    async fn restart(&mut self) {
+        self.close().await;
+        process::exit(0);
+    }
 
     /// Send a message to the socket
     async fn send_ws_response(&mut self, response: Response, unique: String, cache: Option<bool>) {

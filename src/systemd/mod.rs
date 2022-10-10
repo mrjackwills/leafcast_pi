@@ -1,12 +1,7 @@
-use anyhow::Result;
-use std::fs;
-use std::os::unix::fs::PermissionsExt;
-use std::path::Path;
-use std::process::Command;
-use std::{env, io::Write};
-use tracing::{error, info};
-
+use crate::app_error::AppError;
 use crate::parse_cli::CliArgs;
+use std::{env, fs, io::Write, os::unix::fs::PermissionsExt, path::Path, process::Command};
+use tracing::{error, info};
 
 const SC: &str = "systemctl";
 const APP_NAME: &str = env!("CARGO_PKG_NAME");
@@ -15,7 +10,7 @@ enum Code {
     Valid,
     Invalid,
 }
-fn exit(message: &str, code: Code) {
+fn exit(message: &str, code: &Code) {
     match code {
         Code::Valid => {
             info!(message);
@@ -31,7 +26,7 @@ fn exit(message: &str, code: Code) {
 fn check_sudo() {
     match sudo::check() {
         sudo::RunningAs::Root => (),
-        _ => exit("not running as sudo", Code::Invalid),
+        _ => exit("not running as sudo", &Code::Invalid),
     }
 }
 
@@ -39,21 +34,21 @@ fn get_user_name() -> String {
     let mut user_name: Option<String> = None;
     for i in env::vars() {
         if i.0 == "SUDO_USER" {
-            user_name = Some(i.1)
+            user_name = Some(i.1);
         }
     }
     if user_name.is_none() {
-        exit("unable to get username", Code::Invalid);
+        exit("unable to get username", &Code::Invalid);
     }
     let user_name = user_name.unwrap_or_default();
-    if user_name == "ROOT" {
-        exit("invalid username", Code::Invalid);
+    if user_name == "ROOT" || user_name.is_empty() {
+        exit("invalid username", &Code::Invalid);
     }
     user_name
 }
 
 /// Check if unit file in systemd, and delete if true
-fn uninstall_service() -> Result<()> {
+fn uninstall_service() -> Result<(), AppError> {
     let service = get_service_name();
 
     // check if file exits first
@@ -83,9 +78,7 @@ fn get_dot_service() -> String {
     format!("/etc/systemd/system/{service}")
 }
 
-fn create_service_file(user_name: &str) -> Result<String> {
-    // todo handle error
-
+fn create_service_file(user_name: &str) -> Result<String, AppError> {
     let current_dir = env::current_dir()?.display().to_string();
     Ok(format!(
         "[Unit]
@@ -109,7 +102,7 @@ WantedBy=multi-user.target
     ))
 }
 /// If is sudo, and able to get a user name (which isn't root), install leafcast as a service
-fn install_service() -> Result<()> {
+fn install_service() -> Result<(), AppError> {
     let user_name = get_user_name();
 
     let dot_service = create_service_file(&user_name);
@@ -141,17 +134,17 @@ fn install_service() -> Result<()> {
 }
 
 /// if cli argument provided, (un)install service in systemd
-pub fn check(cli: CliArgs) {
+pub fn check(cli: &CliArgs) {
     if cli.install {
         check_sudo();
         uninstall_service()
-            .unwrap_or_else(|_| exit("uninstall old service failure", Code::Invalid));
-        install_service().unwrap_or_else(|_| exit("install failure", Code::Invalid));
-        exit("Installed service", Code::Valid);
+            .unwrap_or_else(|_| exit("uninstall old service failure", &Code::Invalid));
+        install_service().unwrap_or_else(|_| exit("install failure", &Code::Invalid));
+        exit("Installed service", &Code::Valid);
     } else if cli.uninstall {
         check_sudo();
         uninstall_service()
-            .unwrap_or_else(|_| exit("uninstall old service failure", Code::Invalid));
-        exit("Uninstalled service", Code::Valid);
+            .unwrap_or_else(|_| exit("uninstall old service failure", &Code::Invalid));
+        exit("Uninstalled service", &Code::Valid);
     }
 }

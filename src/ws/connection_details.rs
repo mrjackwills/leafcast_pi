@@ -18,7 +18,7 @@ enum Wait {
 }
 
 impl Wait {
-    fn as_sec(&self) -> u64 {
+    const fn as_sec(&self) -> u64 {
         match self {
             Self::Short => 5,
             Self::Long => 60,
@@ -27,7 +27,7 @@ impl Wait {
 }
 
 impl ConnectionDetails {
-    pub fn new() -> Self {
+    pub const fn default() -> Self {
         Self {
             count: 0,
             wait: Wait::Short,
@@ -50,19 +50,18 @@ impl ConnectionDetails {
     pub async fn reconnect_delay(&self) {
         info!(self.count);
         if self.count > 0 {
-            sleep(Duration::from_secs(self.wait.as_sec())).await
+            sleep(Duration::from_secs(self.wait.as_sec())).await;
         }
     }
 
     /// called on each connect, to reset connection, count etc
     pub fn valid_connect(&mut self) {
         self.wait = Wait::Short;
-        self.count = 1;
+        self.count = 0;
         self.is_connected = true;
         self.connection_instant = Some(Instant::now());
         let now = OffsetDateTime::now_utc();
-        let connected_at = format!("{} {}", now.date(), now.time());
-        debug!(%connected_at);
+        debug!("{} {}", now.date(), now.time());
     }
 
     pub fn get_connect_instant(&self) -> Instant {
