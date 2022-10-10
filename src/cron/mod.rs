@@ -28,7 +28,7 @@ impl Croner {
                 let photo = camera.lock().await.take_photo().await;
                 camera.lock().await.save_to_disk(photo).await;
             }
-			// Should I not just wait 60 seconds here?
+            // Should I not just wait 60 seconds here?
             tokio::time::sleep(wait_for()).await;
         }
     }

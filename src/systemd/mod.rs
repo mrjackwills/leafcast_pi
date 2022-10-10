@@ -1,12 +1,7 @@
-use std::fs;
-use std::os::unix::fs::PermissionsExt;
-use std::path::Path;
-use std::process::Command;
-use std::{env, io::Write};
-use tracing::{error, info};
-
 use crate::app_error::AppError;
 use crate::parse_cli::CliArgs;
+use std::{env, fs, io::Write, os::unix::fs::PermissionsExt, path::Path, process::Command};
+use tracing::{error, info};
 
 const SC: &str = "systemctl";
 const APP_NAME: &str = env!("CARGO_PKG_NAME");
@@ -46,7 +41,7 @@ fn get_user_name() -> String {
         exit("unable to get username", &Code::Invalid);
     }
     let user_name = user_name.unwrap_or_default();
-    if user_name == "ROOT" {
+    if user_name == "ROOT" || user_name.is_empty() {
         exit("invalid username", &Code::Invalid);
     }
     user_name

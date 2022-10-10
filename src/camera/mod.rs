@@ -112,10 +112,14 @@ impl Camera {
                     "-",
                 ])
                 .output()
-                .await.map_or_else(|e|{
-					error!("{:?}", e);
-					vec![]
-				}, |o|o.stdout);
+                .await
+                .map_or_else(
+                    |e| {
+                        error!("{:?}", e);
+                        vec![]
+                    },
+                    |o| o.stdout,
+                );
             debug!("Photo taken");
             self.file_size.original = buffer.len();
             self.in_use.store(false, Ordering::SeqCst);
@@ -182,12 +186,12 @@ impl Camera {
         self.file_size.original
     }
 
-	/// get the filesize of the original and onverted image
+    /// get the filesize of the original and onverted image
     pub const fn get_sizes(&self) -> (usize, usize) {
         (self.get_size_converted(), self.get_size_original())
     }
 
-	/// Save the photo to disk
+    /// Save the photo to disk
     pub async fn save_to_disk(&mut self, photo: Vec<u8>) {
         let date_time = OffsetDateTime::from(self.get_timestamp()).to_offset(self.utc_offset);
         let file_name = format!(
