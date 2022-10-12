@@ -1,3 +1,12 @@
+### Chores
++ cargo update, [1dbff86f3f9e03541aaf622933f4b318516957e5]
+
+### Fixes
++ create_release.sh Cargo.lock issue, [bc08603195daeb3e190334906097f12bf763958c]
+
+### Features
++ AutoClose websocket on ping, [57ed7294ac7c19bcfa450a809e0b473fecf865cf]
+
 # <a href='https://github.com/mrjackwills/leafcast_pi/releases/tag/v0.0.2'>v0.0.2</a>
 ### 2022-10-10
 
