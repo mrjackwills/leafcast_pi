@@ -111,8 +111,8 @@ impl WSSender {
         }
     }
 
-     /// close connection, uses a 2 second timeout
-	 pub async fn close(&mut self) {
+    /// close connection, uses a 2 second timeout
+    pub async fn close(&mut self) {
         if let Ok(close) = tokio::time::timeout(
             std::time::Duration::from_secs(2),
             self.writer.lock().await.close(),

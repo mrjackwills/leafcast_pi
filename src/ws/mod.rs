@@ -26,8 +26,8 @@ type WSWriter = SplitSink<WebSocketStream<MaybeTlsStream<TcpStream>>, Message>;
 struct AutoClose(Option<JoinHandle<()>>);
 
 impl AutoClose {
-	/// Will close the connection after 40 seconds, unless it is called within that 40 seconds
-	/// Get called on every ping recevied (server sends a ping every 30 seconds)
+    /// Will close the connection after 40 seconds, unless it is called within that 40 seconds
+    /// Get called on every ping recevied (server sends a ping every 30 seconds)
     fn on_ping(&mut self, ws_sender: &WSSender) {
         if let Some(handle) = self.0.as_ref() {
             handle.abort();
@@ -42,7 +42,7 @@ impl AutoClose {
 
 /// Handle each incoming ws message
 async fn incoming_ws_message(mut reader: WSReader, mut ws_sender: WSSender) {
-	let mut auto_close = AutoClose::default();
+    let mut auto_close = AutoClose::default();
     auto_close.on_ping(&ws_sender);
     while let Ok(Some(message)) = reader.try_next().await {
         match message {
@@ -52,7 +52,7 @@ async fn incoming_ws_message(mut reader: WSReader, mut ws_sender: WSSender) {
                     ws_sender.on_text(message).await;
                 });
             }
-			Message::Ping(_) => auto_close.on_ping(&ws_sender),
+            Message::Ping(_) => auto_close.on_ping(&ws_sender),
             Message::Close(_) => {
                 ws_sender.close().await;
                 break;
