@@ -1,3 +1,9 @@
+### Features
++ Use image webp conversion, and execute in a tokio blocking spawn, [59ad3ce6d83e90dce483ee870ce7262971bd189f]
+
+### Chores
++ create_release v0.1.2, [b36b553cfef332b7fa339e7efd472fe51e456dd5]
+
 # <a href='https://github.com/mrjackwills/leafcast_pi/releases/tag/v0.0.4'>v0.0.4</a>
 ### 2022-10-12
 
