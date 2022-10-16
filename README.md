@@ -38,6 +38,7 @@
 ## Required software
 
 1) <a href='https://github.com/raspberrypi/libcamera-apps' target='_blank' rel='noopener noreferrer'>libcamera-still</a> - should be pre-installed in recent Pi OS version
+2) <a href='https://github.com/webmproject/libwebp' target='_blank' rel='noopener noreferrer'>libwebp</a> - should be pre-installed in recent Pi OS version
 
 ## Download
 

@@ -27,7 +27,7 @@ struct AutoClose(Option<JoinHandle<()>>);
 
 impl AutoClose {
     /// Will close the connection after 40 seconds, unless it is called within that 40 seconds
-    /// Get called on every ping recevied (server sends a ping every 30 seconds)
+    /// Gets called on every ping recevied (server sends a ping every 30 seconds)
     fn on_ping(&mut self, ws_sender: &WSSender) {
         if let Some(handle) = self.0.as_ref() {
             handle.abort();
