@@ -1,4 +1,4 @@
-use crate::env::AppEnv;
+use crate::env::{AppEnv, EnvTimeZone};
 use futures_util::Future;
 use image::imageops::FilterType;
 use std::{
@@ -7,7 +7,7 @@ use std::{
     sync::atomic::{AtomicBool, Ordering},
     time::{Instant, SystemTime},
 };
-use time::{OffsetDateTime, UtcOffset};
+use time::{OffsetDateTime};
 use tokio::{fs, process::Command};
 use tracing::{debug, error};
 
@@ -61,7 +61,7 @@ pub struct Camera {
     file_size: FileSize,
     rotation: String,
     retry_count: u8,
-    utc_offset: UtcOffset,
+    timezone: EnvTimeZone,
     location_images: String,
 }
 
@@ -75,7 +75,7 @@ impl Camera {
             file_size: FileSize::default(),
             rotation: app_envs.rotation.to_string(),
             retry_count: 0,
-            utc_offset: app_envs.utc_offset,
+			timezone: app_envs.timezone.clone(),
             location_images: app_envs.location_images.clone(),
         };
         let photo_buffer = camera.photograph().await;
@@ -190,14 +190,17 @@ impl Camera {
         &self.image_webp
     }
 
+	/// Return the timestamp of the latest image
     pub const fn get_timestamp(&self) -> SystemTime {
         self.image_timestamp
     }
 
+	/// Return converted filesize in bytes
     pub const fn get_size_converted(&self) -> usize {
         self.file_size.converted
     }
 
+	/// Return original filesize in bytes
     pub const fn get_size_original(&self) -> usize {
         self.file_size.original
     }
@@ -209,7 +212,7 @@ impl Camera {
 
     /// Save the photo to disk
     pub async fn save_to_disk(&mut self, photo: Vec<u8>) {
-        let date_time = OffsetDateTime::from(self.get_timestamp()).to_offset(self.utc_offset);
+        let date_time = OffsetDateTime::from(self.get_timestamp()).to_offset(self.timezone.get_offset());
         let file_name = format!(
             "{}_{:0>2}-{:0>2}-{:0>2}",
             date_time.date(),
@@ -217,7 +220,7 @@ impl Camera {
             date_time.minute(),
             date_time.second()
         );
-        if self.get_size_converted() > 15000 {
+        if self.get_size_converted() > 10000 {
             let file_name = format!("{}/{}.jpg", self.location_images, file_name);
             if let Err(e) = fs::write(file_name, photo).await {
                 error!(%e);
