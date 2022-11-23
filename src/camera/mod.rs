@@ -7,7 +7,7 @@ use std::{
     sync::atomic::{AtomicBool, Ordering},
     time::{Instant, SystemTime},
 };
-use time::{OffsetDateTime};
+use time::OffsetDateTime;
 use tokio::{fs, process::Command};
 use tracing::{debug, error};
 
@@ -75,7 +75,7 @@ impl Camera {
             file_size: FileSize::default(),
             rotation: app_envs.rotation.to_string(),
             retry_count: 0,
-			timezone: app_envs.timezone.clone(),
+            timezone: app_envs.timezone.clone(),
             location_images: app_envs.location_images.clone(),
         };
         let photo_buffer = camera.photograph().await;
@@ -190,17 +190,17 @@ impl Camera {
         &self.image_webp
     }
 
-	/// Return the timestamp of the latest image
+    /// Return the timestamp of the latest image
     pub const fn get_timestamp(&self) -> SystemTime {
         self.image_timestamp
     }
 
-	/// Return converted filesize in bytes
+    /// Return converted filesize in bytes
     pub const fn get_size_converted(&self) -> usize {
         self.file_size.converted
     }
 
-	/// Return original filesize in bytes
+    /// Return original filesize in bytes
     pub const fn get_size_original(&self) -> usize {
         self.file_size.original
     }
@@ -212,7 +212,8 @@ impl Camera {
 
     /// Save the photo to disk
     pub async fn save_to_disk(&mut self, photo: Vec<u8>) {
-        let date_time = OffsetDateTime::from(self.get_timestamp()).to_offset(self.timezone.get_offset());
+        let date_time =
+            OffsetDateTime::from(self.get_timestamp()).to_offset(self.timezone.get_offset());
         let file_name = format!(
             "{}_{:0>2}-{:0>2}-{:0>2}",
             date_time.date(),
