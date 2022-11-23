@@ -1,3 +1,11 @@
+### Chores
++ github workflow use dtolnay/rust-toolchain, [ccc1af09fd330ca8b248242e1023c53baa9b111e]
++ aggressive linting with rust 1.65.0, [c1964c55b3e53421d3ee9fd39002feb21bcc9a7f]
++ dependencies updated, [85e49fd6778dece96e6c8d15b16b1daf2a784ed4]
+
+### Fixes
++ create_release typo, [437b9f19805f843916b0130cc98feee79b9c3713]
+
 # <a href='https://github.com/mrjackwills/leafcast_pi/releases/tag/v0.0.5'>v0.0.5</a>
 ### 2022-10-16
 
