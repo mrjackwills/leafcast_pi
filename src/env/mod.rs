@@ -10,11 +10,11 @@ type EnvHashMap = HashMap<String, String>;
 pub struct EnvTimeZone(pub String);
 
 impl EnvTimeZone {
-	pub fn get_offset(&self) -> UtcOffset {
-		timezones::get_by_name(&self.0).map_or(UtcOffset::UTC, |tz| {
+    pub fn get_offset(&self) -> UtcOffset {
+        timezones::get_by_name(&self.0).map_or(UtcOffset::UTC, |tz| {
             tz.get_offset_utc(&time::OffsetDateTime::now_utc()).to_utc()
         })
-	}
+    }
 }
 
 #[derive(Debug, Clone)]
@@ -48,7 +48,10 @@ impl AppEnv {
     }
 
     fn parse_string(key: &str, map: &EnvHashMap) -> Result<String, AppError> {
-        map.get(key).map_or(Err(AppError::MissingEnv(key.into())), |value| Ok(value.into()))
+        map.get(key)
+            .map_or(Err(AppError::MissingEnv(key.into())), |value| {
+                Ok(value.into())
+            })
     }
 
     /// Check that a given timezone is valid, else return UTC

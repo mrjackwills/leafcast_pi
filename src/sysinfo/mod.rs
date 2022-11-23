@@ -53,7 +53,7 @@ impl SysInfo {
     async fn get_uptime() -> usize {
         let uptime = read_to_string("/proc/uptime").await.unwrap_or_default();
         let (uptime, _) = uptime.split_once('.').unwrap_or_default();
-		uptime.parse::<usize>().unwrap_or(0)
+        uptime.parse::<usize>().unwrap_or(0)
     }
 
     pub async fn new(app_envs: &AppEnv, connected_at: Instant) -> Self {
@@ -65,7 +65,9 @@ impl SysInfo {
             internal_ip: Self::get_ip(app_envs).await,
             uptime: Self::get_uptime().await,
             websocket_uptime: connected_at.elapsed().as_secs(),
-            app_uptime: std::time::SystemTime::now().duration_since(app_envs.start_time).map_or(0, |value| value.as_secs()),
+            app_uptime: std::time::SystemTime::now()
+                .duration_since(app_envs.start_time)
+                .map_or(0, |value| value.as_secs()),
             version: env!("CARGO_PKG_VERSION").into(),
         }
     }

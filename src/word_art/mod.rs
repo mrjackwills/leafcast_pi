@@ -88,7 +88,7 @@ mod tests {
             location_log: na.clone(),
             rotation: 0,
             start_time: SystemTime::now(),
-			timezone: EnvTimeZone(String::new()),
+            timezone: EnvTimeZone(String::new()),
             trace: true,
             ws_address: na.clone(),
             ws_apikey: na.clone(),

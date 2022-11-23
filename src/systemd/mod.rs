@@ -101,7 +101,8 @@ RestartSec=1
 
 [Install]
 WantedBy=multi-user.target
-"))
+"
+    ))
 }
 /// If is sudo, and able to get a user name (which isn't root), install leafcast as a service
 fn install_service() -> Result<(), AppError> {
