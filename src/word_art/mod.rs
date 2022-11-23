@@ -73,9 +73,10 @@ impl Intro {
 #[cfg(test)]
 #[allow(clippy::unwrap_used)]
 mod tests {
+    use crate::env::EnvTimeZone;
+
     use super::*;
     use std::time::SystemTime;
-    use time::UtcOffset;
 
     #[test]
     fn word_art_display_intro_trace() {
@@ -87,9 +88,8 @@ mod tests {
             location_log: na.clone(),
             rotation: 0,
             start_time: SystemTime::now(),
-            timezone: na.clone(),
+			timezone: EnvTimeZone(String::new()),
             trace: true,
-            utc_offset: UtcOffset::from_hms(0, 0, 0).unwrap(),
             ws_address: na.clone(),
             ws_apikey: na.clone(),
             ws_password: na.clone(),
@@ -111,9 +111,8 @@ mod tests {
             location_log: na.clone(),
             rotation: 0,
             start_time: SystemTime::now(),
-            timezone: na.clone(),
+            timezone: EnvTimeZone(String::new()),
             trace: false,
-            utc_offset: UtcOffset::from_hms(0, 0, 0).unwrap(),
             ws_address: na.clone(),
             ws_apikey: na.clone(),
             ws_password: na.clone(),
@@ -135,9 +134,8 @@ mod tests {
             location_log: na.clone(),
             rotation: 0,
             start_time: SystemTime::now(),
-            timezone: na.clone(),
+            timezone: EnvTimeZone(String::new()),
             trace: false,
-            utc_offset: UtcOffset::from_hms(0, 0, 0).unwrap(),
             ws_address: na.clone(),
             ws_apikey: na.clone(),
             ws_password: na.clone(),
