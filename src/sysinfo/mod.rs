@@ -52,7 +52,7 @@ impl SysInfo {
 
     async fn get_uptime() -> usize {
         let uptime = read_to_string("/proc/uptime").await.unwrap_or_default();
-        let (uptime, _) = uptime.split_once('.').unwrap_or(("", ""));
+        let (uptime, _) = uptime.split_once('.').unwrap_or_default();
         uptime.parse::<usize>().unwrap_or(0)
     }
 
@@ -65,10 +65,9 @@ impl SysInfo {
             internal_ip: Self::get_ip(app_envs).await,
             uptime: Self::get_uptime().await,
             websocket_uptime: connected_at.elapsed().as_secs(),
-            app_uptime: match std::time::SystemTime::now().duration_since(app_envs.start_time) {
-                Ok(value) => value.as_secs(),
-                Err(_) => 0,
-            },
+            app_uptime: std::time::SystemTime::now()
+                .duration_since(app_envs.start_time)
+                .map_or(0, |value| value.as_secs()),
             version: env!("CARGO_PKG_VERSION").into(),
         }
     }
@@ -81,7 +80,8 @@ impl SysInfo {
 #[allow(clippy::unwrap_used)]
 mod tests {
     use std::time::SystemTime;
-    use time::UtcOffset;
+
+    use crate::env::EnvTimeZone;
 
     use super::*;
 
@@ -94,9 +94,8 @@ mod tests {
             location_log: na.clone(),
             rotation: 0,
             start_time: SystemTime::now(),
-            timezone: "America/New_York".to_owned(),
+            timezone: EnvTimeZone("America/New_York".to_owned()),
             trace: false,
-            utc_offset: UtcOffset::from_hms(-5, 0, 0).unwrap(),
             ws_address: na.clone(),
             ws_apikey: na.clone(),
             ws_password: na.clone(),

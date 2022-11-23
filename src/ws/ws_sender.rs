@@ -66,7 +66,7 @@ impl WSSender {
     /// Create a photo response, is the only response this app sends (other than pongs)
     async fn generate_response(&self, photo_buffer: Vec<u8>) -> Response {
         let date_time = OffsetDateTime::from(self.camera.lock().await.get_timestamp())
-            .to_offset(self.app_envs.utc_offset);
+            .to_offset(self.app_envs.timezone.get_offset());
         let connected_at = self.connected_instant;
         let timestamp = format!(
             "{} {} @ {:0>2}:{:0>2}:{:0>2}",

@@ -30,6 +30,7 @@ fn check_sudo() {
     }
 }
 
+/// Get user name, to check if is sudo
 fn get_user_name() -> String {
     let mut user_name: Option<String> = None;
     for i in env::vars() {
@@ -51,7 +52,6 @@ fn get_user_name() -> String {
 fn uninstall_service() -> Result<(), AppError> {
     let service = get_service_name();
 
-    // check if file exits first
     let path = get_dot_service();
     if Path::new(&path).exists() {
         info!("Stopping service");
@@ -69,15 +69,18 @@ fn uninstall_service() -> Result<(), AppError> {
     Ok(())
 }
 
+/// Get service name for systemd service
 fn get_service_name() -> String {
     format!("{APP_NAME}.service")
 }
 
+/// Get filename for systemd service file
 fn get_dot_service() -> String {
     let service = get_service_name();
     format!("/etc/systemd/system/{service}")
 }
 
+/// Create a systemd service file, with correct details
 fn create_service_file(user_name: &str) -> Result<String, AppError> {
     let current_dir = env::current_dir()?.display().to_string();
     Ok(format!(
