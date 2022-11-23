@@ -65,10 +65,7 @@ impl SysInfo {
             internal_ip: Self::get_ip(app_envs).await,
             uptime: Self::get_uptime().await,
             websocket_uptime: connected_at.elapsed().as_secs(),
-            app_uptime: match std::time::SystemTime::now().duration_since(app_envs.start_time) {
-                Ok(value) => value.as_secs(),
-                Err(_) => 0,
-            },
+            app_uptime: std::time::SystemTime::now().duration_since(app_envs.start_time).map_or(0, |value| value.as_secs()),
             version: env!("CARGO_PKG_VERSION").into(),
         }
     }

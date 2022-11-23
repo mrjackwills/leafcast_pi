@@ -33,10 +33,7 @@ impl AppEnv {
 
     /// Parse "true" or "false" to bool, else false
     fn parse_boolean(key: &str, map: &EnvHashMap) -> bool {
-        match map.get(key) {
-            Some(value) => value == "true",
-            None => false,
-        }
+        map.get(key).map_or(false, |value| value == "true")
     }
 
     /// Return offset for given timezone, else utc
@@ -52,10 +49,7 @@ impl AppEnv {
     }
 
     fn parse_string(key: &str, map: &EnvHashMap) -> Result<String, AppError> {
-        match map.get(key) {
-            Some(value) => Ok(value.into()),
-            None => Err(AppError::MissingEnv(key.into())),
-        }
+        map.get(key).map_or(Err(AppError::MissingEnv(key.into())), |value| Ok(value.into()))
     }
 
     /// Check that a given timezone is valid, else return UTC
@@ -259,7 +253,7 @@ mod tests {
         assert_eq!(result, 0);
 
         let mut map = HashMap::new();
-        map.insert("ROTATION".to_owned(), "".to_owned());
+        map.insert("ROTATION".to_owned(), String::new());
 
         // ACTION
         let result = AppEnv::parse_rotation(&map);

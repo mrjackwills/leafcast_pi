@@ -41,10 +41,7 @@ pub fn to_struct(input: &str) -> Option<MessageValues> {
         None
     } else {
         let error_serialized = serde_json::from_str::<ErrorData>(input);
-        match error_serialized {
-            Ok(data) => Some(MessageValues::Invalid(data)),
-            Err(_) => None,
-        }
+        error_serialized.map_or(None, |data| Some(MessageValues::Invalid(data)))
     }
 }
 
