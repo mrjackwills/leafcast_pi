@@ -1,19 +1,34 @@
-use std::{collections::HashMap, env, time::SystemTime};
+use std::{collections::HashMap, env, time::SystemTime, fmt};
 use time::UtcOffset;
-use time_tz::{timezones, Offset, TimeZone};
+use time_tz::{timezones, TimeZone, Offset};
 
 use crate::app_error::AppError;
 
 type EnvHashMap = HashMap<String, String>;
 
 #[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord)]
-pub struct EnvTimeZone(pub String);
+pub struct EnvTimeZone(String);
 
 impl EnvTimeZone {
-    pub fn get_offset(&self) -> UtcOffset {
+    pub fn new(x: impl Into<String>) -> Self {
+        let x = x.into();
+        if timezones::get_by_name(&x).is_some() {
+            Self(x)
+        } else {
+            Self("Etc/UTC".into())
+        }
+    }
+
+	pub fn get_offset(&self) -> UtcOffset {
         timezones::get_by_name(&self.0).map_or(UtcOffset::UTC, |tz| {
             tz.get_offset_utc(&time::OffsetDateTime::now_utc()).to_utc()
         })
+    }
+}
+
+impl fmt::Display for EnvTimeZone {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        write!(f, "{}", self.0)
     }
 }
 
@@ -27,7 +42,6 @@ pub struct AppEnv {
     pub start_time: SystemTime,
     pub timezone: EnvTimeZone,
     pub trace: bool,
-    // pub utc_offset: UtcOffset,
     pub ws_address: String,
     pub ws_apikey: String,
     pub ws_password: String,
@@ -54,14 +68,12 @@ impl AppEnv {
             })
     }
 
-    /// Check that a given timezone is valid, else return UTC
-    fn parse_timezone(map: &EnvHashMap) -> EnvTimeZone {
-        if let Some(data) = map.get("TIMEZONE") {
-            if timezones::get_by_name(data).is_some() {
-                return EnvTimeZone(data.clone());
-            }
-        }
-        EnvTimeZone("Etc/UTC".to_owned())
+      /// Check that a given timezone is valid, else return UTC
+	  fn parse_timezone(map: &EnvHashMap) -> EnvTimeZone {
+        EnvTimeZone::new(
+            map.get("TIMEZONE")
+                .map_or_else(String::new, std::borrow::ToOwned::to_owned),
+        )
     }
 
     /// Check that a given timezone is valid, else return UTC
