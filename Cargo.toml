@@ -8,7 +8,7 @@ description = "leafcast pi client"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-base64 = "0.13"
+base64 = "0.20"
 clap={version="4.0", features = ["derive", "unicode"] }
 dotenvy = "0.15"
 figlet-rs = "0.1"
@@ -22,8 +22,8 @@ sudo = "0.6"
 thiserror = "1.0"
 time = {version="0.3", features=["local-offset", "macros"]}
 time-tz = "1.0"
-tokio = {version ="1.22", features=["full"]}
-tokio-tungstenite={version= "0.17", features = ["native-tls"]}
+tokio = {version ="1.23", features=["full"]}
+tokio-tungstenite={version= "0.18", features = ["native-tls"]}
 tracing = "0.1"
 tracing-appender = "0.2"
 tracing-subscriber = {version="0.3", features = ["json"]}
