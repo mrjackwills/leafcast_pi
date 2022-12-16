@@ -1,18 +1,15 @@
-### 2022-11-23
+### 2022-12-16
 
 ### Chores
-+ github workflow use dtolnay/rust-toolchain, [ccc1af09fd330ca8b248242e1023c53baa9b111e]
-+ aggressive linting with rust 1.65.0, [c1964c55b3e53421d3ee9fd39002feb21bcc9a7f]
-+ dependencies updated, [85e49fd6778dece96e6c8d15b16b1daf2a784ed4]
-
-### Docs
-+ comments improved, dead code removed, [ b9cdce1e4602866acde0fecad45f3dd76fbfc0dd]
++ Rust 1.66 linting, [cfd4ac74795967b9d4b387c2326925229777b1d5]
++ dependencies updated, [dcc331e2f6eff092b11449b514545d65286cd723]
 
 ### Features
-+ use EnvTimeZone struct to calculate current offset, [203edfff109fc5a0fdf91aaff44b03f13f5f45e7]
++ feat: github action caching, [25e6078905f33d072de5b1613b58b508ed94e116]
++ envTimezone get_offset(), [d3f28a67971c31be9af55abc2b1cf23dbc0b7f85]
 
 ### Fixes
-+ create_release typo, [437b9f19805f843916b0130cc98feee79b9c3713]
++ create_release.sh sed, [e950e3fc60e0bf5872a4debb8ae575813e56bbe8]
 
 
 see <a href='https://github.com/mrjackwills/leafcast_pi/blob/main/CHANGELOG.md'>CHANGELOG.md</a> for more details

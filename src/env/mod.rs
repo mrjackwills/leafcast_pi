@@ -1,6 +1,6 @@
-use std::{collections::HashMap, env, time::SystemTime, fmt};
+use std::{collections::HashMap, env, fmt, time::SystemTime};
 use time::UtcOffset;
-use time_tz::{timezones, TimeZone, Offset};
+use time_tz::{timezones, Offset, TimeZone};
 
 use crate::app_error::AppError;
 
@@ -19,7 +19,7 @@ impl EnvTimeZone {
         }
     }
 
-	pub fn get_offset(&self) -> UtcOffset {
+    pub fn get_offset(&self) -> UtcOffset {
         timezones::get_by_name(&self.0).map_or(UtcOffset::UTC, |tz| {
             tz.get_offset_utc(&time::OffsetDateTime::now_utc()).to_utc()
         })
@@ -68,8 +68,8 @@ impl AppEnv {
             })
     }
 
-      /// Check that a given timezone is valid, else return UTC
-	  fn parse_timezone(map: &EnvHashMap) -> EnvTimeZone {
+    /// Check that a given timezone is valid, else return UTC
+    fn parse_timezone(map: &EnvHashMap) -> EnvTimeZone {
         EnvTimeZone::new(
             map.get("TIMEZONE")
                 .map_or_else(String::new, std::borrow::ToOwned::to_owned),
