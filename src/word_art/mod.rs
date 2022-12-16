@@ -23,7 +23,7 @@ fn paint_text(text: &str, color: Color) -> String {
         .into_iter()
         .map(|i| format!("{tint}{i}\n"))
         .collect::<String>();
-    format!("{}{}", painted, RESET)
+    format!("{painted}{RESET}")
 }
 
 /// Show the intro texts
@@ -88,7 +88,7 @@ mod tests {
             location_log: na.clone(),
             rotation: 0,
             start_time: SystemTime::now(),
-            timezone: EnvTimeZone(String::new()),
+            timezone: EnvTimeZone::new(String::new()),
             trace: true,
             ws_address: na.clone(),
             ws_apikey: na.clone(),
@@ -111,7 +111,7 @@ mod tests {
             location_log: na.clone(),
             rotation: 0,
             start_time: SystemTime::now(),
-            timezone: EnvTimeZone(String::new()),
+            timezone: EnvTimeZone::new(String::new()),
             trace: false,
             ws_address: na.clone(),
             ws_apikey: na.clone(),
@@ -134,7 +134,7 @@ mod tests {
             location_log: na.clone(),
             rotation: 0,
             start_time: SystemTime::now(),
-            timezone: EnvTimeZone(String::new()),
+            timezone: EnvTimeZone::new(String::new()),
             trace: false,
             ws_address: na.clone(),
             ws_apikey: na.clone(),

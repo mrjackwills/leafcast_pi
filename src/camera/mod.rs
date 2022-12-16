@@ -222,7 +222,7 @@ impl Camera {
             date_time.second()
         );
         if self.get_size_converted() > 10000 {
-            let file_name = format!("{}/{}.jpg", self.location_images, file_name);
+            let file_name = format!("{}/{file_name}.jpg", self.location_images);
             if let Err(e) = fs::write(file_name, photo).await {
                 error!(%e);
                 error!("Error saving to disk");

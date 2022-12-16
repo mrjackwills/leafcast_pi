@@ -94,7 +94,7 @@ mod tests {
             location_log: na.clone(),
             rotation: 0,
             start_time: SystemTime::now(),
-            timezone: EnvTimeZone("America/New_York".to_owned()),
+            timezone: EnvTimeZone::new("America/New_York"),
             trace: false,
             ws_address: na.clone(),
             ws_apikey: na.clone(),
