@@ -78,7 +78,7 @@ impl Intro {
 #[cfg(test)]
 #[allow(clippy::unwrap_used)]
 mod tests {
-    use crate::env::EnvTimeZone;
+    use crate::env::{EnvTimeZone, Rotation};
 
     use super::*;
     use std::time::SystemTime;
@@ -91,7 +91,7 @@ mod tests {
             location_ip_address: na.clone(),
             location_log: na.clone(),
             log_level: tracing::Level::TRACE,
-            rotation: 0,
+            rotation: Rotation::Zero,
             start_time: SystemTime::now(),
             timezone: EnvTimeZone::new(String::new()),
             ws_address: na.clone(),
@@ -113,7 +113,7 @@ mod tests {
             location_ip_address: na.clone(),
             location_log: na.clone(),
             log_level: tracing::Level::DEBUG,
-            rotation: 0,
+			rotation: Rotation::Zero,
             start_time: SystemTime::now(),
             timezone: EnvTimeZone::new(String::new()),
             ws_address: na.clone(),
@@ -135,7 +135,7 @@ mod tests {
             location_ip_address: na.clone(),
             location_log: na.clone(),
             log_level: tracing::Level::INFO,
-            rotation: 0,
+			rotation: Rotation::Zero,
             start_time: SystemTime::now(),
             timezone: EnvTimeZone::new(String::new()),
             ws_address: na.clone(),

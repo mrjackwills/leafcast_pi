@@ -81,7 +81,7 @@ impl SysInfo {
 mod tests {
     use std::time::SystemTime;
 
-    use crate::env::EnvTimeZone;
+    use crate::env::{EnvTimeZone, Rotation};
 
     use super::*;
 
@@ -92,7 +92,7 @@ mod tests {
             location_ip_address,
             location_log: na.clone(),
             log_level: tracing::Level::INFO,
-            rotation: 0,
+            rotation: Rotation::Zero,
             start_time: SystemTime::now(),
             timezone: EnvTimeZone::new("America/New_York"),
             ws_address: na.clone(),
