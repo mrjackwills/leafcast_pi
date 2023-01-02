@@ -35,18 +35,23 @@ fn display_intro(app_envs: &AppEnv) -> String {
     let version = paint_text(&format!("v{semver}    {author}"), Color::Green);
 
     let mut output = format!("{leafcast}{version}");
-    if app_envs.trace {
-        output.push('\n');
-        let debug = paint_text("!! TRACE MODE !!", Color::BgRed);
-        for _ in 0..=2 {
-            output.push_str(&debug);
+
+    match app_envs.log_level {
+        tracing::Level::TRACE => {
+            output.push('\n');
+            let debug = paint_text("!! TRACE MODE !!", Color::BgRed);
+            for _ in 0..=2 {
+                output.push_str(&debug);
+            }
         }
-    } else if app_envs.debug {
-        output.push('\n');
-        let debug = paint_text("!! DEBUG MODE !!", Color::BgRed);
-        for _ in 0..=2 {
-            output.push_str(&debug);
+        tracing::Level::DEBUG => {
+            output.push('\n');
+            let debug = paint_text("!! DEBUG MODE !!", Color::BgRed);
+            for _ in 0..=2 {
+                output.push_str(&debug);
+            }
         }
+        _ => {}
     }
     output.push('\n');
     output
@@ -82,14 +87,13 @@ mod tests {
     fn word_art_display_intro_trace() {
         let na = String::from("na");
         let args = AppEnv {
-            debug: true,
             location_images: na.clone(),
             location_ip_address: na.clone(),
             location_log: na.clone(),
+            log_level: tracing::Level::TRACE,
             rotation: 0,
             start_time: SystemTime::now(),
             timezone: EnvTimeZone::new(String::new()),
-            trace: true,
             ws_address: na.clone(),
             ws_apikey: na.clone(),
             ws_password: na.clone(),
@@ -105,14 +109,13 @@ mod tests {
     fn word_art_display_intro_debug() {
         let na = String::from("na");
         let args = AppEnv {
-            debug: true,
             location_images: na.clone(),
             location_ip_address: na.clone(),
             location_log: na.clone(),
+            log_level: tracing::Level::DEBUG,
             rotation: 0,
             start_time: SystemTime::now(),
             timezone: EnvTimeZone::new(String::new()),
-            trace: false,
             ws_address: na.clone(),
             ws_apikey: na.clone(),
             ws_password: na.clone(),
@@ -128,14 +131,13 @@ mod tests {
     fn word_art_display_intro() {
         let na = String::from("na");
         let args = AppEnv {
-            debug: false,
             location_images: na.clone(),
             location_ip_address: na.clone(),
             location_log: na.clone(),
+            log_level: tracing::Level::INFO,
             rotation: 0,
             start_time: SystemTime::now(),
             timezone: EnvTimeZone::new(String::new()),
-            trace: false,
             ws_address: na.clone(),
             ws_apikey: na.clone(),
             ws_password: na.clone(),
