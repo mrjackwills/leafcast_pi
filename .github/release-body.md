@@ -1,15 +1,20 @@
-### 2022-12-16
+### 2023-01-24
 
 ### Chores
-+ Rust 1.66 linting, [cfd4ac74795967b9d4b387c2326925229777b1d5]
-+ dependencies updated, [dcc331e2f6eff092b11449b514545d65286cd723]
++ dependencies updated, [e12622521d6a43e6b72bb79b4cc1e8dbe8328d5f], [f5ba7390718c5f2730bfd483716da6467866e58a], [550a8c166494b1c68a47c83bb6d1cf3a98d414ba]
 
 ### Features
-+ feat: github action caching, [25e6078905f33d072de5b1613b58b508ed94e116]
-+ envTimezone get_offset(), [d3f28a67971c31be9af55abc2b1cf23dbc0b7f85]
++ token request add timeout & useragent, [b0bcd91e64c31b51eb047610b4a6a87503e5a125]
++ Rotation enum, [facf97a347e08e20cd616a10e8dac1fce2478934]
 
 ### Fixes
-+ create_release.sh sed, [e950e3fc60e0bf5872a4debb8ae575813e56bbe8]
++ replace depreciated base_64 methods, [dfd251e057ec1748533724cd9604a6510ce683d7]
+
+### Refactors
++ tracing_level into AppEnv, [2331971e2c0b9e62e7e88a0ce11432d8b916bc8a]
++ is_connected removed, [d2cd27305720ce5f57af44f75b01ce20d317db09]
++ Reaplace photograph `fn photograph<'a>(&'a mut self) -> Pin<Box<dyn Future<Output = Vec<u8>> + 'a + Send>>` with just a `async fn` & sleep [c549c28ee75bbfd66ec70a98940d1d78b063ddf8]
+
 
 
 see <a href='https://github.com/mrjackwills/leafcast_pi/blob/main/CHANGELOG.md'>CHANGELOG.md</a> for more details
