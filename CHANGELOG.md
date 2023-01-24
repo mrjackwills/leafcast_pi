@@ -11,6 +11,7 @@
 ### Refactors
 + tracing_level into AppEnv, [2331971e2c0b9e62e7e88a0ce11432d8b916bc8a]
 + is_connected removed, [d2cd27305720ce5f57af44f75b01ce20d317db09]
++ Reaplace photograph `fn photograph<'a>(&'a mut self) -> Pin<Box<dyn Future<Output = Vec<u8>> + 'a + Send>>` with just a `async fn` & sleep [c549c28ee75bbfd66ec70a98940d1d78b063ddf8]
 
 
 # <a href='https://github.com/mrjackwills/leafcast_pi/releases/tag/v0.0.7'>v0.0.7</a>
