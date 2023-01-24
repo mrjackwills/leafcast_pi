@@ -32,16 +32,35 @@ impl fmt::Display for EnvTimeZone {
     }
 }
 
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
+pub enum Rotation {
+    Zero,
+    Ninety,
+    OneEighty,
+    TwoSeventy,
+}
+
+impl fmt::Display for Rotation {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        let to_disp = match self {
+            Self::Zero => 0,
+            Self::Ninety => 90,
+            Self::OneEighty => 180,
+            Self::TwoSeventy => 270,
+        };
+        write!(f, "{to_disp}")
+    }
+}
+
 #[derive(Debug, Clone)]
 pub struct AppEnv {
-    pub debug: bool,
     pub location_images: String,
     pub location_ip_address: String,
     pub location_log: String,
-    pub rotation: u16,
+    pub log_level: tracing::Level,
+    pub rotation: Rotation,
     pub start_time: SystemTime,
     pub timezone: EnvTimeZone,
-    pub trace: bool,
     pub ws_address: String,
     pub ws_apikey: String,
     pub ws_password: String,
@@ -61,6 +80,30 @@ impl AppEnv {
         map.get(key).map_or(false, |value| value == "true")
     }
 
+    /// Parse debug and/or trace into tracing level
+    fn parse_log(map: &EnvHashMap) -> tracing::Level {
+        if Self::parse_boolean("LOG_TRACE", map) {
+            tracing::Level::TRACE
+        } else if Self::parse_boolean("LOG_DEBUG", map) {
+            tracing::Level::DEBUG
+        } else {
+            tracing::Level::INFO
+        }
+    }
+
+    /// Check that a given timezone is valid, else return UTC
+    fn parse_rotation(map: &EnvHashMap) -> Rotation {
+        if let Some(data) = map.get("ROTATION") {
+            return match data.as_ref() {
+                "90" => Rotation::Ninety,
+                "180" => Rotation::OneEighty,
+                "270" => Rotation::TwoSeventy,
+                _ => Rotation::Zero,
+            };
+        }
+        Rotation::Zero
+    }
+
     fn parse_string(key: &str, map: &EnvHashMap) -> Result<String, AppError> {
         map.get(key)
             .map_or(Err(AppError::MissingEnv(key.into())), |value| {
@@ -76,16 +119,6 @@ impl AppEnv {
         )
     }
 
-    /// Check that a given timezone is valid, else return UTC
-    fn parse_rotation(map: &EnvHashMap) -> u16 {
-        if let Some(data) = map.get("ROTATION") {
-            if data == "180" {
-                return 180;
-            }
-        }
-        0
-    }
-
     /// Load, and parse .env file, return AppEnv
     fn generate() -> Result<Self, AppError> {
         let env_map = env::vars()
@@ -94,7 +127,6 @@ impl AppEnv {
             .collect::<HashMap<String, String>>();
 
         Ok(Self {
-            debug: Self::parse_boolean("DEBUG", &env_map),
             location_images: Self::check_file_exists(Self::parse_string(
                 "LOCATION_IMAGES",
                 &env_map,
@@ -104,10 +136,10 @@ impl AppEnv {
                 "LOCATION_IP_ADDRESS",
                 &env_map,
             )?)?,
+            log_level: Self::parse_log(&env_map),
             rotation: Self::parse_rotation(&env_map),
             start_time: SystemTime::now(),
             timezone: Self::parse_timezone(&env_map),
-            trace: Self::parse_boolean("TRACE", &env_map),
             ws_address: Self::parse_string("WS_ADDRESS", &env_map)?,
             ws_apikey: Self::parse_string("WS_APIKEY", &env_map)?,
             ws_token_address: Self::parse_string("WS_TOKEN_ADDRESS", &env_map)?,
@@ -185,13 +217,33 @@ mod tests {
     fn env_parse_rotation_ok() {
         // FIXTURES
         let mut map = HashMap::new();
+        map.insert("ROTATION".to_owned(), "90".to_owned());
+
+        // ACTION
+        let result = AppEnv::parse_rotation(&map);
+
+        // CHECK
+        assert_eq!(result, Rotation::Ninety);
+
+        // FIXTURES
+        let mut map = HashMap::new();
         map.insert("ROTATION".to_owned(), "180".to_owned());
 
         // ACTION
         let result = AppEnv::parse_rotation(&map);
 
         // CHECK
-        assert_eq!(result, 180);
+        assert_eq!(result, Rotation::OneEighty);
+
+        // FIXTURES
+        let mut map = HashMap::new();
+        map.insert("ROTATION".to_owned(), "270".to_owned());
+
+        // ACTION
+        let result = AppEnv::parse_rotation(&map);
+
+        // CHECK
+        assert_eq!(result, Rotation::TwoSeventy);
 
         // FIXTURES
         let mut map = HashMap::new();
@@ -201,7 +253,7 @@ mod tests {
         let result = AppEnv::parse_rotation(&map);
 
         // CHECK
-        assert_eq!(result, 0);
+        assert_eq!(result, Rotation::Zero);
 
         // FIXTURES
         let mut map = HashMap::new();
@@ -211,7 +263,7 @@ mod tests {
         let result = AppEnv::parse_rotation(&map);
 
         // CHECK
-        assert_eq!(result, 0);
+        assert_eq!(result, Rotation::Zero);
 
         let mut map = HashMap::new();
         map.insert("ROTATION".to_owned(), String::new());
@@ -220,7 +272,7 @@ mod tests {
         let result = AppEnv::parse_rotation(&map);
 
         // CHECK
-        assert_eq!(result, 0);
+        assert_eq!(result, Rotation::Zero);
 
         // FIXTURES
         let map = HashMap::new();
@@ -229,7 +281,7 @@ mod tests {
         let result = AppEnv::parse_rotation(&map);
 
         // CHECK
-        assert_eq!(result, 0);
+        assert_eq!(result, Rotation::Zero);
     }
 
     #[test]
@@ -282,6 +334,85 @@ mod tests {
         // CHECK
         assert_eq!(result.0, "Etc/UTC");
     }
+
+    #[test]
+    fn env_parse_log_valid() {
+        // FIXTURES
+        let map = HashMap::from([("RANDOM_STRING".to_owned(), "123".to_owned())]);
+
+        // ACTION
+        let result = AppEnv::parse_log(&map);
+
+        // CHECK
+        assert_eq!(result, tracing::Level::INFO);
+
+        // FIXTURES
+        let map = HashMap::from([("LOG_DEBUG".to_owned(), "false".to_owned())]);
+
+        // ACTION
+        let result = AppEnv::parse_log(&map);
+
+        // CHECK
+        assert_eq!(result, tracing::Level::INFO);
+
+        // FIXTURES
+        let map = HashMap::from([("LOG_TRACE".to_owned(), "false".to_owned())]);
+
+        // ACTION
+        let result = AppEnv::parse_log(&map);
+
+        // CHECK
+        assert_eq!(result, tracing::Level::INFO);
+
+        // FIXTURES
+        let map = HashMap::from([
+            ("LOG_DEBUG".to_owned(), "false".to_owned()),
+            ("LOG_TRACE".to_owned(), "false".to_owned()),
+        ]);
+
+        // ACTION
+        let result = AppEnv::parse_log(&map);
+
+        // CHECK
+        assert_eq!(result, tracing::Level::INFO);
+
+        // FIXTURES
+        let map = HashMap::from([
+            ("LOG_DEBUG".to_owned(), "true".to_owned()),
+            ("LOG_TRACE".to_owned(), "false".to_owned()),
+        ]);
+
+        // ACTION
+        let result = AppEnv::parse_log(&map);
+
+        // CHECK
+        assert_eq!(result, tracing::Level::DEBUG);
+
+        // FIXTURES
+        let map = HashMap::from([
+            ("LOG_DEBUG".to_owned(), "true".to_owned()),
+            ("LOG_TRACE".to_owned(), "true".to_owned()),
+        ]);
+
+        // ACTION
+        let result = AppEnv::parse_log(&map);
+
+        // CHECK
+        assert_eq!(result, tracing::Level::TRACE);
+
+        // FIXTURES
+        let map = HashMap::from([
+            ("LOG_DEBUG".to_owned(), "false".to_owned()),
+            ("LOG_TRACE".to_owned(), "true".to_owned()),
+        ]);
+
+        // ACTION
+        let result = AppEnv::parse_log(&map);
+
+        // CHECK
+        assert_eq!(result, tracing::Level::TRACE);
+    }
+
     #[test]
     fn env_panic_appenv() {
         // ACTION

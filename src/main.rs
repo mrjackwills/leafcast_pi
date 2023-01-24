@@ -25,20 +25,12 @@ use env::AppEnv;
 use parse_cli::CliArgs;
 use std::sync::Arc;
 use tokio::sync::Mutex;
-use tracing::Level;
 use tracing_subscriber::{fmt, prelude::__tracing_subscriber_SubscriberExt};
 use word_art::Intro;
 use ws::open_connection;
 
-fn setup_tracing(app_envs: &AppEnv) -> Result<(), AppError> {
-    let level = if app_envs.trace {
-        Level::TRACE
-    } else if app_envs.debug {
-        Level::DEBUG
-    } else {
-        Level::INFO
-    };
-    let logfile = tracing_appender::rolling::never(&app_envs.location_log, "leafcast.log");
+fn setup_tracing(app_env: &AppEnv) -> Result<(), AppError> {
+    let logfile = tracing_appender::rolling::never(&app_env.location_log, "leafcast.log");
 
     let log_fmt = fmt::Layer::default()
         .json()
@@ -49,7 +41,7 @@ fn setup_tracing(app_envs: &AppEnv) -> Result<(), AppError> {
         fmt::Subscriber::builder()
             .with_file(true)
             .with_line_number(true)
-            .with_max_level(level)
+            .with_max_level(app_env.log_level)
             .finish()
             .with(log_fmt),
     ) {

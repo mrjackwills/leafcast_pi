@@ -81,21 +81,20 @@ impl SysInfo {
 mod tests {
     use std::time::SystemTime;
 
-    use crate::env::EnvTimeZone;
+    use crate::env::{EnvTimeZone, Rotation};
 
     use super::*;
 
     fn gen_app_env(location_ip_address: String) -> AppEnv {
         let na = String::from("na");
         AppEnv {
-            debug: true,
             location_images: String::from("photos"),
             location_ip_address,
             location_log: na.clone(),
-            rotation: 0,
+            log_level: tracing::Level::INFO,
+            rotation: Rotation::Zero,
             start_time: SystemTime::now(),
             timezone: EnvTimeZone::new("America/New_York"),
-            trace: false,
             ws_address: na.clone(),
             ws_apikey: na.clone(),
             ws_password: na.clone(),
