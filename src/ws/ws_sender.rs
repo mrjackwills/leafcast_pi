@@ -1,3 +1,4 @@
+use base64::{Engine, engine};
 use futures_util::lock::Mutex;
 use futures_util::SinkExt;
 use std::process;
@@ -6,7 +7,6 @@ use std::time::Instant;
 use time::OffsetDateTime;
 use tracing::{error, trace};
 
-use base64::encode as to_b64;
 use tokio::sync::Mutex as TokioMutex;
 
 use crate::camera::Camera;
@@ -78,8 +78,9 @@ impl WSSender {
         );
         let sizes = self.camera.lock().await.get_sizes();
         let pi_info = SysInfo::new(&self.app_envs, connected_at).await;
+
         Response::Photo(Photo {
-            image: format!("data:image/webp;base64,{}", to_b64(photo_buffer)),
+            image: format!("data:image/webp;base64,{}", engine::general_purpose::STANDARD.encode(photo_buffer)),
             pi_info,
             timestamp,
             size_converted: sizes.0,
