@@ -1,9 +1,7 @@
 use crate::env::{AppEnv, EnvTimeZone};
-use futures_util::Future;
 use image::imageops::FilterType;
 use std::{
     io::Cursor,
-    pin::Pin,
     sync::atomic::{AtomicBool, Ordering},
     time::{Instant, SystemTime},
 };
@@ -85,48 +83,44 @@ impl Camera {
 
     // Need to properly handle errors here!
     // return result?
-    fn photograph<'a>(&'a mut self) -> Pin<Box<dyn Future<Output = Vec<u8>> + 'a + Send>> {
-        Box::pin(async move {
-            // issue with this?
-            // maybe include a counter so that it will only try 10 times?
-            if self.in_use.load(Ordering::SeqCst) {
-                tokio::time::sleep(std::time::Duration::from_millis(100)).await;
-                return Self::photograph(self).await;
-            }
-            debug!("Taking photo");
-            self.in_use.store(true, Ordering::SeqCst);
-            let dimensions = Dimension::Big.get_dimensions();
-            self.image_timestamp = SystemTime::now();
-            let buffer = Command::new("libcamera-still")
-                .args([
-                    "-q",
-                    "95",
-                    "-n",
-                    "--rotation",
-                    &self.rotation.to_string(),
-                    "--width",
-                    &dimensions.width.to_string(),
-                    "--height",
-                    &dimensions.height.to_string(),
-                    "--immediate",
-                    "-o",
-                    "-",
-                ])
-                .output()
-                .await
-                .map_or_else(
-                    |e| {
-                        error!("{:?}", e);
-                        vec![]
-                    },
-                    |o| o.stdout,
-                );
-            debug!("Photo taken");
-            self.file_size.original = buffer.len();
-            self.in_use.store(false, Ordering::SeqCst);
-            self.retry_count = 0;
-            buffer
-        })
+    async fn photograph(&mut self) -> Vec<u8> {
+        while self.in_use.load(Ordering::Relaxed) {
+            tokio::time::sleep(std::time::Duration::from_millis(100)).await;
+        }
+
+        debug!("Taking photo");
+        self.in_use.store(true, Ordering::Relaxed);
+        let dimensions = Dimension::Big.get_dimensions();
+        self.image_timestamp = SystemTime::now();
+        let buffer = Command::new("libcamera-still")
+            .args([
+                "-q",
+                "95",
+                "-n",
+                "--rotation",
+                &self.rotation.to_string(),
+                "--width",
+                &dimensions.width.to_string(),
+                "--height",
+                &dimensions.height.to_string(),
+                "--immediate",
+                "-o",
+                "-",
+            ])
+            .output()
+            .await
+            .map_or_else(
+                |e| {
+                    error!("{:?}", e);
+                    vec![]
+                },
+                |o| o.stdout,
+            );
+        debug!("Photo taken");
+        self.file_size.original = buffer.len();
+        self.in_use.store(false, Ordering::Relaxed);
+        self.retry_count = 0;
+        buffer
     }
 
     // /// Take a small
