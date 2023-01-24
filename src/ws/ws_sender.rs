@@ -1,4 +1,4 @@
-use base64::{Engine, engine};
+use base64::{engine, Engine};
 use futures_util::lock::Mutex;
 use futures_util::SinkExt;
 use std::process;
@@ -80,7 +80,10 @@ impl WSSender {
         let pi_info = SysInfo::new(&self.app_envs, connected_at).await;
 
         Response::Photo(Photo {
-            image: format!("data:image/webp;base64,{}", engine::general_purpose::STANDARD.encode(photo_buffer)),
+            image: format!(
+                "data:image/webp;base64,{}",
+                engine::general_purpose::STANDARD.encode(photo_buffer)
+            ),
             pi_info,
             timestamp,
             size_converted: sizes.0,

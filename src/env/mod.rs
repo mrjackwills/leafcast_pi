@@ -34,24 +34,23 @@ impl fmt::Display for EnvTimeZone {
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub enum Rotation {
-	Zero,
-	Ninety,
-	OneEighty,
-	TwoSeventy
+    Zero,
+    Ninety,
+    OneEighty,
+    TwoSeventy,
 }
 
 impl fmt::Display for Rotation {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-		let to_disp = match self {
-			Self::Zero => 0,
-			Self::Ninety => 90,
-			Self::OneEighty => 180,
-			Self::TwoSeventy => 270,
-		};
+        let to_disp = match self {
+            Self::Zero => 0,
+            Self::Ninety => 90,
+            Self::OneEighty => 180,
+            Self::TwoSeventy => 270,
+        };
         write!(f, "{to_disp}")
     }
 }
-
 
 #[derive(Debug, Clone)]
 pub struct AppEnv {
@@ -95,14 +94,13 @@ impl AppEnv {
     /// Check that a given timezone is valid, else return UTC
     fn parse_rotation(map: &EnvHashMap) -> Rotation {
         if let Some(data) = map.get("ROTATION") {
-			return match data.as_ref() {
-				"90" => Rotation::Ninety,
-				"180" => Rotation::OneEighty,
-				"270" => Rotation::TwoSeventy,
-				_ => Rotation::Zero,
-				
-			}
-		}
+            return match data.as_ref() {
+                "90" => Rotation::Ninety,
+                "180" => Rotation::OneEighty,
+                "270" => Rotation::TwoSeventy,
+                _ => Rotation::Zero,
+            };
+        }
         Rotation::Zero
     }
 
@@ -217,25 +215,25 @@ mod tests {
 
     #[test]
     fn env_parse_rotation_ok() {
-		 // FIXTURES
-		 let mut map = HashMap::new();
-		 map.insert("ROTATION".to_owned(), "90".to_owned());
- 
-		 // ACTION
-		 let result = AppEnv::parse_rotation(&map);
- 
-		 // CHECK
-		 assert_eq!(result, Rotation::Ninety);
+        // FIXTURES
+        let mut map = HashMap::new();
+        map.insert("ROTATION".to_owned(), "90".to_owned());
 
-		  // FIXTURES
-		  let mut map = HashMap::new();
-		  map.insert("ROTATION".to_owned(), "180".to_owned());
-  
-		  // ACTION
-		  let result = AppEnv::parse_rotation(&map);
-  
-		  // CHECK
-		  assert_eq!(result, Rotation::OneEighty);
+        // ACTION
+        let result = AppEnv::parse_rotation(&map);
+
+        // CHECK
+        assert_eq!(result, Rotation::Ninety);
+
+        // FIXTURES
+        let mut map = HashMap::new();
+        map.insert("ROTATION".to_owned(), "180".to_owned());
+
+        // ACTION
+        let result = AppEnv::parse_rotation(&map);
+
+        // CHECK
+        assert_eq!(result, Rotation::OneEighty);
 
         // FIXTURES
         let mut map = HashMap::new();
