@@ -2,12 +2,11 @@ use crate::env::{AppEnv, EnvTimeZone};
 use image::imageops::FilterType;
 use std::{
     io::Cursor,
-    sync::atomic::{AtomicBool, Ordering},
     time::{Instant, SystemTime},
 };
 use time::OffsetDateTime;
 use tokio::{fs, process::Command};
-use tracing::{debug, error};
+use tracing::{debug, error, info};
 
 #[derive(Clone, Copy, Debug)]
 struct FileSize {
@@ -51,14 +50,10 @@ impl Dimension {
 
 #[derive(Debug)]
 pub struct Camera {
-    in_use: AtomicBool,
-    // Maybe store this as the webp string instead? Would need to create like so;
-    // format!("data:image/webp;base64,{}", to_b64(photo_buffer)),
     image_webp: Vec<u8>,
     image_timestamp: SystemTime,
     file_size: FileSize,
     rotation: String,
-    retry_count: u8,
     timezone: EnvTimeZone,
     location_images: String,
 }
@@ -67,12 +62,10 @@ impl Camera {
     /// Setup camera, take a photo immediately in order to fill values instead of using Option<T>
     pub async fn init(app_envs: &AppEnv) -> Self {
         let mut camera = Self {
-            in_use: AtomicBool::new(false),
             image_webp: vec![],
             image_timestamp: SystemTime::now(),
             file_size: FileSize::default(),
             rotation: app_envs.rotation.to_string(),
-            retry_count: 0,
             timezone: app_envs.timezone.clone(),
             location_images: app_envs.location_images.clone(),
         };
@@ -84,12 +77,7 @@ impl Camera {
     // Need to properly handle errors here!
     // return result?
     async fn photograph(&mut self) -> Vec<u8> {
-        while self.in_use.load(Ordering::Relaxed) {
-            tokio::time::sleep(std::time::Duration::from_millis(100)).await;
-        }
-
-        debug!("Taking photo");
-        self.in_use.store(true, Ordering::Relaxed);
+        info!("Taking photo");
         let dimensions = Dimension::Big.get_dimensions();
         self.image_timestamp = SystemTime::now();
         let buffer = Command::new("libcamera-still")
@@ -116,10 +104,8 @@ impl Camera {
                 },
                 |o| o.stdout,
             );
-        debug!("Photo taken");
+        info!("Photo taken");
         self.file_size.original = buffer.len();
-        self.in_use.store(false, Ordering::Relaxed);
-        self.retry_count = 0;
         buffer
     }
 
