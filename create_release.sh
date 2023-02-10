@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # rust create_release
-# v0.2.4
+# v0.2.5
 
 STAR_LINE='****************************************'
 CWD=$(pwd)
@@ -173,7 +173,10 @@ cargo_test () {
 
 # Build output as github action would
 cargo_build () {
+	echo -e "\n${PURPLE}cross build --target aarch64-unknown-linux-musl --release${RESET}"
 	cross build --target aarch64-unknown-linux-musl --release
+	ask_continue
+	echo -e "\n${PURPLE}cross build --target arm-unknown-linux-musleabihf --release${RESET}"
 	cross build --target arm-unknown-linux-musleabihf --release
 	ask_continue
 }
