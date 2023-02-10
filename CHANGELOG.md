@@ -13,13 +13,6 @@
 + get_auth_token single liner, [b60ed73ec09d5bf1c0bda244112f062d7b052bbc]
 + camera in_use removed, [794e149245271e1a8749e0e05385cc20f3965725]
 
-### Chores
-+ dependencies updated, [8bd0b9cbaa962320e2767152e2d5070e3d72b4d1]
-### Features
-+ download.sh added. [a9b887169490a43a2a39803f7713a1b9dc0a9a55]
-### Refactors
-+ camera in_use removed, [794e149245271e1a8749e0e05385cc20f3965725]
-
 # <a href='https://github.com/mrjackwills/leafcast_pi/releases/tag/v0.1.0'>v0.1.0</a>
 ### 2023-01-24
 
