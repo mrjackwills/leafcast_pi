@@ -28,7 +28,7 @@
 
 ## Required Hardware
 
-1) Raspberry pi - designed for, tested, and fully working, on a <a href='https://www.raspberrypi.com/products/raspberry-pi-zero-2-w/' target='_blank' rel='noopener noreferrer'>Raspbery pi zero w 2</a>
+1) Raspberry pi - designed for, tested, and fully working, on a <a href='https://www.raspberrypi.com/products/raspberry-pi-zero-2-w/' target='_blank' rel='noopener noreferrer'>Raspberry pi zero w 2</a>
 2) Pi camera, such as <a href='https://www.raspberrypi.com/products/camera-module-v2/' target='_blank' rel='noopener noreferrer'>camera module</a>
 
 ## Required services
@@ -65,8 +65,8 @@ b) ```./leafcast``` run in current session
 | --- | --- |
 |```~/leafcast/logs```		| Log files |
 |```~/leafcast/photos```	| photo storage |
-|```~/leafcast/.env```		| enviromental variables |
-|```/ramdrive/ip.addr```		| ip address |
+|```~/leafcast/.env```		| environmental variables |
+|```/ramdrive/ip.addr```	| ip address |
 
 ```bash
 # addition to /etc/fstab

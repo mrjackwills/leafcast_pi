@@ -1,20 +1,19 @@
-### 2023-01-24
+### 2023-02-10
 
 ### Chores
-+ dependencies updated, [e12622521d6a43e6b72bb79b4cc1e8dbe8328d5f], [f5ba7390718c5f2730bfd483716da6467866e58a], [550a8c166494b1c68a47c83bb6d1cf3a98d414ba]
++ dev container updated, [4c432de9f35f5db8dbde26f1f94a25c442433e0e]
++ create_release updated, [36b2a3e2b7dec8cafa029f344133ccc872ef5188]
++ dependencies updated, [507aed8c1abaef225cddac303069118fd1de5e0e], [19ab22fa09dc5f6ab0e28c7e0d99a54c612935be], [fdd5091a47bdaeb19f3dd899923b91e7411579b2], [8bd0b9cbaa962320e2767152e2d5070e3d72b4d1]
 
 ### Features
-+ token request add timeout & useragent, [b0bcd91e64c31b51eb047610b4a6a87503e5a125]
-+ Rotation enum, [facf97a347e08e20cd616a10e8dac1fce2478934]
++ download.sh added, [a9b887169490a43a2a39803f7713a1b9dc0a9a55]
 
 ### Fixes
-+ replace depreciated base_64 methods, [dfd251e057ec1748533724cd9604a6510ce683d7]
++ github workflow, [2ea9628f934547f6af38cf4dbb409f8a35505608]
 
 ### Refactors
-+ tracing_level into AppEnv, [2331971e2c0b9e62e7e88a0ce11432d8b916bc8a]
-+ is_connected removed, [d2cd27305720ce5f57af44f75b01ce20d317db09]
-+ Reaplace photograph `fn photograph<'a>(&'a mut self) -> Pin<Box<dyn Future<Output = Vec<u8>> + 'a + Send>>` with just a `async fn` & sleep [c549c28ee75bbfd66ec70a98940d1d78b063ddf8]
-
++ get_auth_token single liner, [b60ed73ec09d5bf1c0bda244112f062d7b052bbc]
++ camera in_use removed, [794e149245271e1a8749e0e05385cc20f3965725]
 
 
 see <a href='https://github.com/mrjackwills/leafcast_pi/blob/main/CHANGELOG.md'>CHANGELOG.md</a> for more details

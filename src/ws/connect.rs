@@ -25,7 +25,7 @@ struct PostResponse {
 }
 /// Make a https request to get an access token
 async fn get_auth_token(app_envs: &AppEnv) -> Result<String, AppError> {
-    let response = reqwest::Client::builder()
+    Ok(reqwest::Client::builder()
         .connect_timeout(std::time::Duration::from_millis(5000))
         .gzip(true)
         .brotli(true)
@@ -40,8 +40,8 @@ async fn get_auth_token(app_envs: &AppEnv) -> Result<String, AppError> {
         .send()
         .await?
         .json::<PostResponse>()
-        .await?;
-    Ok(response.response)
+        .await?
+        .response)
 }
 /// Connect to wesbsocket server
 pub async fn ws_upgrade(app_envs: &AppEnv) -> Result<WsStream, AppError> {

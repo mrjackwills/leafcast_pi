@@ -1,3 +1,21 @@
+# <a href='https://github.com/mrjackwills/leafcast_pi/releases/tag/v0.2.0'>v0.2.0</a>
+### 2023-02-10
+
+### Chores
++ dev container updated,[4c432de9](https://github.com/mrjackwills/leafcast_pi/commit/4c432de9f35f5db8dbde26f1f94a25c442433e0e)
++ create_release updated,[36b2a3e2](https://github.com/mrjackwills/leafcast_pi/commit/36b2a3e2b7dec8cafa029f344133ccc872ef5188)
++ dependencies updated,[507aed8c](https://github.com/mrjackwills/leafcast_pi/commit/507aed8c1abaef225cddac303069118fd1de5e0e),[19ab22fa](https://github.com/mrjackwills/leafcast_pi/commit/19ab22fa09dc5f6ab0e28c7e0d99a54c612935be),[fdd5091a](https://github.com/mrjackwills/leafcast_pi/commit/fdd5091a47bdaeb19f3dd899923b91e7411579b2),[8bd0b9cb](https://github.com/mrjackwills/leafcast_pi/commit/8bd0b9cbaa962320e2767152e2d5070e3d72b4d1)
+
+### Features
++ download.sh added,[a9b88716](https://github.com/mrjackwills/leafcast_pi/commit/a9b887169490a43a2a39803f7713a1b9dc0a9a55)
+
+### Fixes
++ github workflow,[2ea9628f](https://github.com/mrjackwills/leafcast_pi/commit/2ea9628f934547f6af38cf4dbb409f8a35505608)
+
+### Refactors
++ get_auth_token single liner,[b60ed73e](https://github.com/mrjackwills/leafcast_pi/commit/b60ed73ec09d5bf1c0bda244112f062d7b052bbc)
++ camera in_use removed,[794e1492](https://github.com/mrjackwills/leafcast_pi/commit/794e149245271e1a8749e0e05385cc20f3965725)
+
 # <a href='https://github.com/mrjackwills/leafcast_pi/releases/tag/v0.1.0'>v0.1.0</a>
 ### 2023-01-24
 
@@ -91,7 +109,7 @@
 + use new staticPi protocol, [f3a6026d](https://github.com/mrjackwills/leafcast_pi/commit/f3a6026dd192925b6a242b1e5d1b9d7669b83102),
 
 ### Refactors
-+ aggresive linting, [dbbe7469](https://github.com/mrjackwills/leafcast_pi/commit/dbbe74697dd5a35db191f40223281d00bf1ca286),
++ aggressive linting, [dbbe7469](https://github.com/mrjackwills/leafcast_pi/commit/dbbe74697dd5a35db191f40223281d00bf1ca286),
 + Camera.is_use use AtomicBool, [94f72bc5](https://github.com/mrjackwills/leafcast_pi/commit/94f72bc5c6a9f0c62acf3051c485ef41694d1108),
 + WS message handler, [4ee8b784](https://github.com/mrjackwills/leafcast_pi/commit/4ee8b784ec5682d7581a931138caa20a389f424c),
 + use global AppError, [91de86c0](https://github.com/mrjackwills/leafcast_pi/commit/91de86c06defd4ce0a76a138969c6c979277935f),
