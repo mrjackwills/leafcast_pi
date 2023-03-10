@@ -1,19 +1,15 @@
-### 2023-02-10
+### 2023-03-10
 
 ### Chores
-+ dev container updated, [4c432de9f35f5db8dbde26f1f94a25c442433e0e]
-+ create_release updated, [36b2a3e2b7dec8cafa029f344133ccc872ef5188]
-+ dependencies updated, [507aed8c1abaef225cddac303069118fd1de5e0e], [19ab22fa09dc5f6ab0e28c7e0d99a54c612935be], [fdd5091a47bdaeb19f3dd899923b91e7411579b2], [8bd0b9cbaa962320e2767152e2d5070e3d72b4d1]
++ dependencies updated, [244c04be939588a91337ff1b854995f11502544b]
++ Rust 1.68.0 linting, [747ee70dd1732b8918a169649f22cad786faf755], [30218029e79496e34f5d8fe2f8c67ede445e55f7]
++ devcontainer updated, [72a00a2555aedb1c81f37d96df92f36178a124d1]
 
 ### Features
-+ download.sh added, [a9b887169490a43a2a39803f7713a1b9dc0a9a55]
-
-### Fixes
-+ github workflow, [2ea9628f934547f6af38cf4dbb409f8a35505608]
++ _typos.toml added, [9e5c22a577392d1fa09a019f64409b00f8f81b15]
 
 ### Refactors
-+ get_auth_token single liner, [b60ed73ec09d5bf1c0bda244112f062d7b052bbc]
-+ camera in_use removed, [794e149245271e1a8749e0e05385cc20f3965725]
++ use `.ok()`, [8903a0a17ee2812df6d1c293abe67d183b80c5aa]
 
 
 see <a href='https://github.com/mrjackwills/leafcast_pi/blob/main/CHANGELOG.md'>CHANGELOG.md</a> for more details
