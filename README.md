@@ -13,7 +13,7 @@
 <p align="center">
 	Built in <a href='https://www.rust-lang.org/' target='_blank' rel='noopener noreferrer'>Rust</a>
 	<br>
-	<sub> See typescript branch for original, now not maintained, typescript version</sub>
+	<sub> See typescript branch for original, now not maintained, TypeScript version</sub>
 </p>
 
 <p align="center">
@@ -21,7 +21,7 @@
 </p>
 
 <p align="center">
-	<a href="https://raw.githubusercontent.com/mrjackwills/leafcast_vue/main/.github/pi_cam.jpg" target='_blank' rel='noopener noreferrer'>
+	<a href="https://raw.githubusercontent.com/mrjackwills/leafcast_pi/main/.github/pi_cam.jpg" target='_blank' rel='noopener noreferrer'>
 		<img src='./.github/pi_cam.jpg' width='75%'/>
 	</a>
 </p>

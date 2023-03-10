@@ -123,7 +123,7 @@ impl WSSender {
         )
         .await
         {
-            close.unwrap_or_default();
+            close.ok();
         }
     }
 }
