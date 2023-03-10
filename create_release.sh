@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # rust create_release
-# v0.2.5
+# v0.2.7
 
 STAR_LINE='****************************************'
 CWD=$(pwd)
@@ -107,7 +107,7 @@ update_release_body_and_changelog () {
 	sed -i -E "s=(\s)\[([0-9a-f]{8})([0-9a-f]{32})\]=[\2](${GIT_REPO_URL}/commit/\2\3)=g" ./CHANGELOG.md
 
 	# Update changelog to add links to closed issues - comma included!
-	# "closes [#1]" -> "closes [#1](https:/www.../issues/1)""
+	# "closes #1" -> "closes [#1](https:/www.../issues/1)""
 	sed -i -r -E "s=closes \#([0-9]+)=closes [#\1](${GIT_REPO_URL}/issues/\1)=g" ./CHANGELOG.md
 }
 
@@ -172,11 +172,11 @@ cargo_test () {
 }
 
 # Build output as github action would
-cargo_build () {
-	echo -e "\n${PURPLE}cross build --target aarch64-unknown-linux-musl --release${RESET}"
+cross_build () {
+	echo -e "\n${GREEN}cross build --target aarch64-unknown-linux-musl --release${RESET}"
 	cross build --target aarch64-unknown-linux-musl --release
 	ask_continue
-	echo -e "\n${PURPLE}cross build --target arm-unknown-linux-musleabihf --release${RESET}"
+	echo -e "\n${GREEN}cross build --target arm-unknown-linux-musleabihf --release${RESET}"
 	cross build --target arm-unknown-linux-musleabihf --release
 	ask_continue
 }
@@ -201,7 +201,7 @@ release_flow() {
 	get_git_remote_url
 
 	cargo_test
-	cargo_build
+	cross_build
 
 	cd "${CWD}" || error_close "Can't find ${CWD}"
 	check_tag
@@ -232,9 +232,8 @@ release_flow() {
 	git commit -m "chore: release ${NEW_TAG_WITH_V}"
 
 	release_continue "git checkout main"
+	echo -e "git merge --no-ff \"${RELEASE_BRANCH}\" -m \"chore: merge ${RELEASE_BRANCH} into main\"" 
 	git checkout main
-
-	release_continue "git merge --no-ff \"${RELEASE_BRANCH}\" -m \"chore: merge ${RELEASE_BRANCH} into main\"" 
 	git merge --no-ff "$RELEASE_BRANCH" -m "chore: merge ${RELEASE_BRANCH} into main"
 
 	release_continue "git tag -am \"${RELEASE_BRANCH}\" \"$NEW_TAG_WITH_V\""
@@ -246,7 +245,7 @@ release_flow() {
 	release_continue "git checkout dev"
 	git checkout dev
 
-	release_continue "git merge --no-ff main -m 'chore: merge main into dev'"
+	release_continue "git merge --no-ff main -m \"chore: merge main into dev\""
 	git merge --no-ff main -m 'chore: merge main into dev'
 
 	release_continue "git push origin dev"
@@ -257,10 +256,11 @@ release_flow() {
 }
 
 main() {
-	cmd=(dialog --backtitle "Choose option" --radiolist "choose" 14 80 16)
+	cmd=(dialog --backtitle "Choose build option" --radiolist "choose" 14 80 16)
 	options=(
-		1 "test" off
-		2 "release" off
+		1 "build" off
+		2 "test" off
+		3 "release" off
 	)
 	choices=$("${cmd[@]}" "${options[@]}" 2>&1 >/dev/tty)
 	exitStatus=$?
@@ -274,14 +274,17 @@ main() {
 			0)
 				exit;;
 			1)
-				cargo_test
+				cross_build
 				main
 				break;;
 			2)
+				cargo_test
+				main
+				break;;
+			3)
 				release_flow
 				break;;
 		esac
 	done
 }
-
 main
