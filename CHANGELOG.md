@@ -1,3 +1,9 @@
+### Chores
++ dependencies updated, [3b961bad38529b3d1423497ba2501dba8175dcd7]
+
+### Features
++ drop camera mutex in generate_response, [2412123a43ba054d2e5ac552ad5af652cb1e165c]
+
 # <a href='https://github.com/mrjackwills/leafcast_pi/releases/tag/v0.2.1'>v0.2.1</a>
 ### 2023-03-10
 
