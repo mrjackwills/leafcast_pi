@@ -119,41 +119,32 @@ impl Camera {
     /// Will execute the conversion on a spawn blocking tokio thread
     async fn convert_to_webp(&mut self, buffer: &[u8]) {
         let now = Instant::now();
-        match image::load_from_memory_with_format(buffer, image::ImageFormat::Jpeg) {
-            Ok(mut image) => {
-                match tokio::task::spawn_blocking(move || {
-                    let dimensions = Dimension::Small.get_dimensions();
-                    image = image.resize(dimensions.width, dimensions.height, FilterType::Nearest);
-                    debug!("resize took: {}ms", now.elapsed().as_millis());
-                    let mut buf_writer = Cursor::new(Vec::new());
-                    let now = Instant::now();
-                    if let Err(e) = image::write_buffer_with_format(
-                        &mut buf_writer,
-                        image.as_bytes(),
-                        image.width(),
-                        image.height(),
-                        image.color(),
-                        image::ImageFormat::WebP,
-                    ) {
-                        error!("{:?}", e);
-                        error!("image::write_buffer error");
-                    }
-                    debug!("conversion took: {}ms", now.elapsed().as_millis());
-                    buf_writer.into_inner()
-                })
-                .await
-                {
-                    Ok(webp) => {
-                        self.file_size.converted = webp.len();
-                        self.image_webp = webp;
-                    }
-                    Err(_) => {
-                        error!("join handle error");
-                    }
-                };
-            }
-            Err(e) => {
-                error!("{:?}", e);
+        if let Ok(mut image) = image::load_from_memory_with_format(buffer, image::ImageFormat::Jpeg)
+        {
+            if let Ok(webp) = tokio::task::spawn_blocking(move || {
+                let dimensions = Dimension::Small.get_dimensions();
+                image = image.resize(dimensions.width, dimensions.height, FilterType::Nearest);
+                debug!("resize took: {}ms", now.elapsed().as_millis());
+                let mut buf_writer = Cursor::new(Vec::new());
+                let now = Instant::now();
+                if let Err(e) = image::write_buffer_with_format(
+                    &mut buf_writer,
+                    image.as_bytes(),
+                    image.width(),
+                    image.height(),
+                    image.color(),
+                    image::ImageFormat::WebP,
+                ) {
+                    error!("{:?}", e);
+                    error!("image::write_buffer error");
+                }
+                debug!("conversion took: {}ms", now.elapsed().as_millis());
+                buf_writer.into_inner()
+            })
+            .await
+            {
+                self.file_size.converted = webp.len();
+                self.image_webp = webp;
             }
         }
     }

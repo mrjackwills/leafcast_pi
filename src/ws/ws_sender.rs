@@ -28,13 +28,13 @@ pub struct WSSender {
 
 impl WSSender {
     pub fn new(
-        app_envs: AppEnv,
+        app_envs: &AppEnv,
         camera: Arc<TokioMutex<Camera>>,
         connected_instant: Instant,
         writer: Arc<Mutex<WSWriter>>,
     ) -> Self {
         Self {
-            app_envs,
+            app_envs: app_envs.clone(),
             camera,
             connected_instant,
             writer,

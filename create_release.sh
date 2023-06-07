@@ -171,11 +171,17 @@ cargo_test () {
 	ask_continue
 }
 
+cargo_clean() {
+	cargo clean
+}
+
 # Build output as github action would
 cross_build () {
+	cargo_clean
 	echo -e "\n${GREEN}cross build --target aarch64-unknown-linux-musl --release${RESET}"
 	cross build --target aarch64-unknown-linux-musl --release
 	ask_continue
+	cargo_clean
 	echo -e "\n${GREEN}cross build --target arm-unknown-linux-musleabihf --release${RESET}"
 	cross build --target arm-unknown-linux-musleabihf --release
 	ask_continue
