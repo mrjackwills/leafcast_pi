@@ -76,13 +76,12 @@ pub async fn open_connection(app_envs: AppEnv, camera: Arc<TokioMutex<Camera>>) 
                 connection_details.valid_connect();
 
                 let (writer, reader) = socket.split();
-                let writer = Arc::new(Mutex::new(writer));
 
                 let ws_sender = WSSender::new(
-                    app_envs.clone(),
+                    &app_envs,
                     Arc::clone(&camera),
                     connection_details.get_connect_instant(),
-                    writer,
+                    Arc::new(Mutex::new(writer)),
                 );
                 incoming_ws_message(reader, ws_sender).await;
                 info!("incoming_ws_message done, reconnect next");
