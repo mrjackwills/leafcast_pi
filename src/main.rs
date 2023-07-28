@@ -11,10 +11,10 @@
 // Only allow when debugging
 // #![allow(unused)]
 
+mod app_env;
 mod app_error;
 mod camera;
 mod cron;
-mod env;
 mod parse_cli;
 mod sysinfo;
 mod systemd;
@@ -22,10 +22,10 @@ mod word_art;
 mod ws;
 mod ws_messages;
 
+use app_env::AppEnv;
 use app_error::AppError;
 use camera::Camera;
 use cron::Croner;
-use env::AppEnv;
 use parse_cli::CliArgs;
 use std::sync::Arc;
 use tokio::sync::Mutex;

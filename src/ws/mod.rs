@@ -14,7 +14,7 @@ use tokio::{net::TcpStream, sync::Mutex as TokioMutex, task::JoinHandle};
 use tokio_tungstenite::{self, tungstenite::Message, MaybeTlsStream, WebSocketStream};
 use tracing::{error, info};
 
-use crate::{camera::Camera, env::AppEnv};
+use crate::{app_env::AppEnv, camera::Camera};
 
 use ws_sender::WSSender;
 
