@@ -14,7 +14,7 @@
 mod app_error;
 mod camera;
 mod cron;
-mod env;
+mod app_env;
 mod parse_cli;
 mod sysinfo;
 mod systemd;
@@ -25,7 +25,7 @@ mod ws_messages;
 use app_error::AppError;
 use camera::Camera;
 use cron::Croner;
-use env::AppEnv;
+use app_env::AppEnv;
 use parse_cli::CliArgs;
 use std::sync::Arc;
 use tokio::sync::Mutex;

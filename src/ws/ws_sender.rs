@@ -12,7 +12,7 @@ use tokio::sync::Mutex as TokioMutex;
 use crate::camera::Camera;
 use crate::sysinfo::SysInfo;
 use crate::{
-    env::AppEnv,
+    app_env::AppEnv,
     ws_messages::{to_struct, MessageValues, ParsedMessage, Photo, Response, StructuredResponse},
 };
 

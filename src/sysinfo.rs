@@ -3,7 +3,7 @@ use std::time::Instant;
 use serde::{Deserialize, Serialize};
 use tokio::fs::read_to_string;
 
-use crate::{app_error::AppError, env::AppEnv};
+use crate::{app_error::AppError, app_env::AppEnv};
 
 #[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct SysInfo {
@@ -81,7 +81,7 @@ impl SysInfo {
 mod tests {
     use std::time::SystemTime;
 
-    use crate::env::{EnvTimeZone, Rotation};
+    use crate::app_env::{EnvTimeZone, Rotation};
 
     use super::*;
 
