@@ -65,7 +65,7 @@ async fn main() -> Result<(), AppError> {
     systemd::check(&cli);
     Intro::new(&app_envs).show();
     let camera = Arc::new(Mutex::new(Camera::init(&app_envs).await));
-    Croner::init(Arc::clone(&camera)).await;
+    Croner::init(Arc::clone(&camera));
     open_connection(app_envs, camera).await;
     Ok(())
 }

@@ -1,3 +1,10 @@
+# <a href='https://github.com/mrjackwills/leafcast_pi/releases/tag/v0.2.5'>v0.2.5</a>
+### 2023-08-24
+
+### Chores
++ Rust 1.72.0 linting,[e89381e0](https://github.com/mrjackwills/leafcast_pi/commit/e89381e08c414b94f0d98c75bd62b43a99a258bb)
++ dependencies updated,[f8c44cc3](https://github.com/mrjackwills/leafcast_pi/commit/f8c44cc359b6d794cd25fa1fbffff37af6bc6f84)
+
 # <a href='https://github.com/mrjackwills/leafcast_pi/releases/tag/v0.2.4'>v0.2.4</a>
 ### 2023-07-28
 
