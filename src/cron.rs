@@ -8,7 +8,7 @@ pub struct Croner;
 
 impl Croner {
     /// create a looper and spawn into it's own async thread
-    pub async fn init(camera: Arc<Mutex<Camera>>) {
+    pub fn init(camera: Arc<Mutex<Camera>>) {
         let looper = Self;
         tokio::spawn(async move { looper.init_loop(camera).await });
     }

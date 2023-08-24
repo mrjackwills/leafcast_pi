@@ -767,7 +767,7 @@ impl FontName {
 
     #[allow(clippy::too_many_lines)]
     const fn get_roman() -> &'static str {
-        r##"flf2a$ 10 10 30 -1 7
+        r#"flf2a$ 10 10 30 -1 7
 Roman by Nick Miners N.M.Miners@durham.ac.uk
 June 1994
 
@@ -1794,7 +1794,7 @@ o888 d88' $#
 o888o Y8' $#
           $#
           $#
-          $#"##
+          $#"#
     }
 
     #[allow(clippy::too_many_lines)]
@@ -2940,7 +2940,7 @@ d88" "88b$ @
 
     #[allow(clippy::too_many_lines)]
     const fn get_small() -> &'static str {
-        r#"flf2a$ 5 4 13 15 10 0 22415
+        r"flf2a$ 5 4 13 15 10 0 22415
 Small by Glenn Chappell 4/93 -- based on Standard
 Includes ISO Latin-1
 figlet release 2.1 -- 12 Aug 1994
@@ -4037,6 +4037,6 @@ of new full-width/kern/smush alternatives, but default output is NOT changed.
  | || |@
   \_, |@
   |__/ @@
-"#
+"
     }
 }
