@@ -1,11 +1,8 @@
-### 2023-07-28
+### 2023-08-24
 
 ### Chores
-+ dependencies updated, [b32546b92af76b3628fe194b057c4b0a4c0803c0]
-+ create_release 0.3.0, [37bde87d9db55b5adbaf10874f2b41e60d9e576a]
-
-### Refactors
-+ single files removed from folders, [d1778cabed2c22f861c5b93c00b8891e468fbc56]
++ Rust 1.72.0 linting, [e89381e08c414b94f0d98c75bd62b43a99a258bb]
++ dependencies updated, [f8c44cc359b6d794cd25fa1fbffff37af6bc6f84]
 
 
 see <a href='https://github.com/mrjackwills/leafcast_pi/blob/main/CHANGELOG.md'>CHANGELOG.md</a> for more details
