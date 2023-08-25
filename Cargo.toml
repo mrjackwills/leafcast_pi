@@ -9,7 +9,7 @@ description = "leafcast pi client"
 
 [dependencies]
 clap={version="4.4", features = ["derive", "unicode"] }
-data-encoding = "2.4.0"
+data-encoding = "2.4"
 dotenvy = "0.15"
 figlet-rs = "0.1"
 futures-util = "0.3"
