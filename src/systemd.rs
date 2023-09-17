@@ -31,21 +31,14 @@ fn check_sudo() {
 }
 
 /// Get user name, to check if is sudo
-fn get_user_name() -> String {
-    let mut user_name: Option<String> = None;
-    for i in env::vars() {
-        if i.0 == "SUDO_USER" {
-            user_name = Some(i.1);
+fn get_user_name() -> Option<String> {
+    std::env::var("SUDO_USER").map_or(None, |user_name| {
+        if user_name == "root" || user_name.is_empty() {
+            None
+        } else {
+            Some(user_name)
         }
-    }
-    if user_name.is_none() {
-        exit("unable to get username", &Code::Invalid);
-    }
-    let user_name = user_name.unwrap_or_default();
-    if user_name == "ROOT" || user_name.is_empty() {
-        exit("invalid username", &Code::Invalid);
-    }
-    user_name
+    })
 }
 
 /// Check if unit file in systemd, and delete if true
@@ -101,38 +94,33 @@ RestartSec=1
 
 [Install]
 WantedBy=multi-user.target
-"
-    ))
+"))
 }
 /// If is sudo, and able to get a user name (which isn't root), install leafcast as a service
 fn install_service() -> Result<(), AppError> {
-    let user_name = get_user_name();
+    if let Some(user_name) = get_user_name() {
 
-    let dot_service = create_service_file(&user_name);
+        info!("Create service file");
+        let mut file = fs::File::create(get_dot_service())?;
 
-    let path = get_dot_service();
+        info!("Write unit text to file");
+        file.write_all(create_service_file(&user_name)?.as_bytes())?;
 
-    info!("Create service file");
-    let mut file = fs::File::create(path)?;
+        info!("Set correct service file permissions");
+        file.metadata()?.permissions().set_mode(0o644);
 
-    info!("Write unit text to file");
-    file.write_all(dot_service?.as_bytes())?;
+        info!("Reload systemctl daemon");
+        Command::new(SC).arg("daemon-reload").output()?;
 
-    info!("Set correct service file permissions");
-    let metadata = file.metadata()?;
-    let mut permissions = metadata.permissions();
-    permissions.set_mode(0o644);
+        let service_name = get_service_name();
+        info!("Enable service");
+        Command::new(SC).args(["enable", &service_name]).output()?;
 
-    info!("Reload systemctl daemon");
-    Command::new(SC).arg("daemon-reload").output()?;
-
-    let service_name = get_service_name();
-    info!("Enable service");
-    Command::new(SC).args(["enable", &service_name]).output()?;
-
-    info!("Start service");
-    Command::new(SC).args(["start", &service_name]).output()?;
-
+        info!("Start service");
+        Command::new(SC).args(["start", &service_name]).output()?;
+    } else {
+        exit("invalid user", &Code::Invalid);
+    }
     Ok(())
 }
 
