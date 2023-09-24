@@ -87,7 +87,9 @@ ip address gets updated every 5 minutes, so write to a ramdrive rather than caus
 
 requires docker & <a href='https://github.com/cross-rs/cross' target='_blank' rel='noopener noreferrer'>cross-rs</a>
 
-1) ```cross build --target aarch64-unknown-linux-musl --release```
+1) ```cross build --target aarch64-unknown-linux-musl --release``` or ```cross build --target aarch64-unknown-linux-gnu --release```
+
+
 
 ## Tests
 
