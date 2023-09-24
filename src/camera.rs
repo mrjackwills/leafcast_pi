@@ -6,7 +6,7 @@ use std::{
 };
 use time::OffsetDateTime;
 use tokio::{fs, process::Command};
-use tracing::{debug, error, info};
+use tracing::{error, info, debug};
 
 #[derive(Clone, Copy, Debug)]
 struct FileSize {
@@ -156,7 +156,7 @@ impl Camera {
         photo_buffer
     }
 
-    // maybe store the image as web64 instead of &[u8]
+    // store the image as web64 instead of &[u8]
     pub fn get_webp(&self) -> &[u8] {
         &self.image_webp
     }

@@ -1,10 +1,12 @@
-use crate::app_error::AppError;
+use crate::app_env::AppEnv;
 use crate::parse_cli::CliArgs;
-use std::{env, fs, io::Write, os::unix::fs::PermissionsExt, path::Path, process::Command};
+use crate::{app_error::AppError, LOGS_NAME};
+use std::{env, fs, io::Write, path::Path, process::Command};
 use tracing::{error, info};
 
-const SC: &str = "systemctl";
+const SYSTEMCTL: &str = "systemctl";
 const APP_NAME: &str = env!("CARGO_PKG_NAME");
+const CHOWN: &str = "chown";
 
 enum Code {
     Valid,
@@ -42,22 +44,33 @@ fn get_user_name() -> Option<String> {
 }
 
 /// Check if unit file in systemd, and delete if true
-fn uninstall_service() -> Result<(), AppError> {
-    let service = get_service_name();
+fn uninstall_service(app_envs: &AppEnv) -> Result<(), AppError> {
+    if let Some(user_name) = get_user_name() {
+        let service = get_service_name();
 
-    let path = get_dot_service();
-    if Path::new(&path).exists() {
-        info!("Stopping service");
-        Command::new(SC).args(["stop", &service]).output()?;
+        let path = get_dot_service();
 
-        info!("Disabling service");
-        Command::new(SC).args(["disable", &service]).output()?;
+        if Path::new(&path).exists() {
+            info!("Stopping service");
+            Command::new(SYSTEMCTL).args(["stop", &service]).output()?;
 
-        info!("Removing service file");
-        fs::remove_file(path)?;
+            info!("Disabling service");
+            Command::new(SYSTEMCTL)
+                .args(["disable", &service])
+                .output()?;
 
-        info!("Reload daemon-service");
-        Command::new(SC).arg("daemon-reload").output()?;
+            info!("Removing service file");
+            fs::remove_file(path)?;
+
+            info!("Reload daemon-service");
+            Command::new(SYSTEMCTL).arg("daemon-reload").output()?;
+
+            info!("Change logs ownership");
+            let logs_path = format!("{}/{}", app_envs.location_log, LOGS_NAME);
+            Command::new(CHOWN)
+                .args([&format!("{user_name}:{user_name}"), &logs_path])
+                .output()?;
+        }
     }
     Ok(())
 }
@@ -90,34 +103,41 @@ SyslogIdentifier={APP_NAME}
 User={user_name}
 Group={user_name}
 Restart=always
-RestartSec=1
+RestartSec=5
 
 [Install]
 WantedBy=multi-user.target
-"))
+"
+    ))
 }
 /// If is sudo, and able to get a user name (which isn't root), install leafcast as a service
-fn install_service() -> Result<(), AppError> {
+fn install_service(app_envs: &AppEnv) -> Result<(), AppError> {
     if let Some(user_name) = get_user_name() {
-
         info!("Create service file");
         let mut file = fs::File::create(get_dot_service())?;
 
         info!("Write unit text to file");
         file.write_all(create_service_file(&user_name)?.as_bytes())?;
 
-        info!("Set correct service file permissions");
-        file.metadata()?.permissions().set_mode(0o644);
-
         info!("Reload systemctl daemon");
-        Command::new(SC).arg("daemon-reload").output()?;
+        Command::new(SYSTEMCTL).arg("daemon-reload").output()?;
 
         let service_name = get_service_name();
         info!("Enable service");
-        Command::new(SC).args(["enable", &service_name]).output()?;
+        Command::new(SYSTEMCTL)
+            .args(["enable", &service_name])
+            .output()?;
+
+        info!("Change logs ownership");
+        let logs_path = format!("{}/{}", app_envs.location_log, LOGS_NAME);
+        Command::new(CHOWN)
+            .args([&format!("{APP_NAME}:{APP_NAME}"), &logs_path])
+            .output()?;
 
         info!("Start service");
-        Command::new(SC).args(["start", &service_name]).output()?;
+        Command::new(SYSTEMCTL)
+            .args(["start", &service_name])
+            .output()?;
     } else {
         exit("invalid user", &Code::Invalid);
     }
@@ -125,16 +145,16 @@ fn install_service() -> Result<(), AppError> {
 }
 
 /// if cli argument provided, (un)install service in systemd
-pub fn check(cli: &CliArgs) {
+pub fn check(cli: &CliArgs, app_envs: &AppEnv) {
     if cli.install {
         check_sudo();
-        uninstall_service()
+        uninstall_service(app_envs)
             .unwrap_or_else(|_| exit("uninstall old service failure", &Code::Invalid));
-        install_service().unwrap_or_else(|_| exit("install failure", &Code::Invalid));
+        install_service(app_envs).unwrap_or_else(|_| exit("install failure", &Code::Invalid));
         exit("Installed service", &Code::Valid);
     } else if cli.uninstall {
         check_sudo();
-        uninstall_service()
+        uninstall_service(app_envs)
             .unwrap_or_else(|_| exit("uninstall old service failure", &Code::Invalid));
         exit("Uninstalled service", &Code::Valid);
     }
