@@ -33,8 +33,10 @@ use tracing_subscriber::{fmt, prelude::__tracing_subscriber_SubscriberExt};
 use word_art::Intro;
 use ws::open_connection;
 
+const LOGS_NAME: &str = "leafcast.log";
+
 fn setup_tracing(app_env: &AppEnv) -> Result<(), AppError> {
-    let logfile = tracing_appender::rolling::never(&app_env.location_log, "leafcast.log");
+    let logfile = tracing_appender::rolling::never(&app_env.location_log, LOGS_NAME);
 
     let log_fmt = fmt::Layer::default()
         .json()
@@ -62,7 +64,7 @@ async fn main() -> Result<(), AppError> {
     let app_envs = AppEnv::get();
     let cli = CliArgs::new();
     setup_tracing(&app_envs)?;
-    systemd::check(&cli);
+    systemd::check(&cli, &app_envs);
     Intro::new(&app_envs).show();
     let camera = Arc::new(Mutex::new(Camera::init(&app_envs).await));
     Croner::init(Arc::clone(&camera));

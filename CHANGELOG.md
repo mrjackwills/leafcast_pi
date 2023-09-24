@@ -1,3 +1,20 @@
+# <a href='https://github.com/mrjackwills/leafcast_pi/releases/tag/v0.2.7'>v0.2.7</a>
+### 2023-09-24
+
+### Chores
++ dependencies updated,[315c775a](https://github.com/mrjackwills/leafcast_pi/commit/315c775a98a21272a0f9fd7b1ab189afa6a6eb45),[235e2eb4](https://github.com/mrjackwills/leafcast_pi/commit/235e2eb436ad2e7114c8914cdfd33800c5fb51c4)
+
+### Docs
++ README build for gnu,[7e0f1694](https://github.com/mrjackwills/leafcast_pi/commit/7e0f1694f56a62b63931aa5762b7ef1dffe4894f)
+
+### Fixes
++ remove camera deadlock,[5f1a06c4](https://github.com/mrjackwills/leafcast_pi/commit/5f1a06c44f5607fde3b9c4e571f1f38f93c2eb17)
+
+### Refactors
++ improved systemd procedure,[6efa8213](https://github.com/mrjackwills/leafcast_pi/commit/6efa8213b5a469d99eaa1713b8b0650774f2c7b1)
++ systemd install error handling improvement,[1009893a](https://github.com/mrjackwills/leafcast_pi/commit/1009893af32c69072afda20f545819d9692c439e)
+
+
 # <a href='https://github.com/mrjackwills/leafcast_pi/releases/tag/v0.2.6'>v0.2.6</a>
 ### 2023-08-25
 

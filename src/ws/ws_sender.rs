@@ -49,14 +49,13 @@ impl WSSender {
                 MessageValues::Valid(data, unique) => match data {
                     ParsedMessage::ForceUpdate => {
                         self.camera.lock().await.take_photo().await;
-                        let response = self
-                            .generate_response(self.camera.lock().await.get_webp().to_owned())
-                            .await;
+                        let webp = self.camera.lock().await.get_webp().to_owned();
+                        let response = self.generate_response(&webp).await;
                         self.send_ws_response(response, unique, Some(true)).await;
                     }
                     ParsedMessage::Photo => {
                         let webp = self.camera.lock().await.get_webp().to_owned();
-                        let response = self.generate_response(webp).await;
+                        let response = self.generate_response(&webp).await;
                         self.send_ws_response(response, unique, Some(true)).await;
                     }
                 },
@@ -65,7 +64,7 @@ impl WSSender {
     }
 
     /// Create a photo response, is the only response this app sends (other than pongs)
-    async fn generate_response(&self, photo_buffer: Vec<u8>) -> Response {
+    async fn generate_response(&self, photo_buffer: &[u8]) -> Response {
         let camera = self.camera.lock().await;
         let date_time = OffsetDateTime::from(camera.get_timestamp())
             .to_offset(self.app_envs.timezone.get_offset());
@@ -83,10 +82,7 @@ impl WSSender {
         let pi_info = SysInfo::new(&self.app_envs, connected_at).await;
 
         Response::Photo(Photo {
-            image: format!(
-                "data:image/webp;base64,{}",
-                BASE64.encode(photo_buffer.as_slice())
-            ),
+            image: format!("data:image/webp;base64,{}", BASE64.encode(photo_buffer)),
             pi_info,
             timestamp,
             size_converted,

@@ -156,7 +156,7 @@ impl Camera {
         photo_buffer
     }
 
-    // maybe store the image as web64 instead of &[u8]
+    // store the image as web64 instead of &[u8]
     pub fn get_webp(&self) -> &[u8] {
         &self.image_webp
     }

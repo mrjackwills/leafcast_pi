@@ -1,6 +1,6 @@
 [package]
 name = "leafcast"
-version = "0.2.6"
+version = "0.2.7"
 edition = "2021"
 authors = ["Jack Wills <email@mrjackwills.com>"]
 description = "leafcast pi client"
@@ -26,11 +26,11 @@ tokio-tungstenite={version= "0.20", features = ["rustls-tls-native-roots"]}
 tracing = "0.1"
 tracing-appender = "0.2"
 tracing-subscriber = {version="0.3", features = ["json"]}
-users = "0.11"
 
 [profile.release]
 lto = true
 codegen-units = 1
 panic = 'abort'
-strip=true
+strip  =true
 debug = false
+opt-level = "s"
