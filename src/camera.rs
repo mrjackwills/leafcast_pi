@@ -6,7 +6,7 @@ use std::{
 };
 use time::OffsetDateTime;
 use tokio::{fs, process::Command};
-use tracing::{error, info, debug};
+use tracing::{debug, error, info};
 
 #[derive(Clone, Copy, Debug)]
 struct FileSize {
