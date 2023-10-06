@@ -51,7 +51,7 @@ fn setup_tracing(app_env: &AppEnv) -> Result<(), AppError> {
             .finish()
             .with(log_fmt),
     ) {
-        Ok(_) => Ok(()),
+        Ok(()) => Ok(()),
         Err(e) => {
             println!("{e:?}");
             Err(AppError::Tracing)
