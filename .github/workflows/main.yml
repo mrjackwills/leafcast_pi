@@ -4,54 +4,72 @@ on:
     tags:
       - 'v[0-9]+.[0-9]+.[0-9]+'
 jobs:
-  deploy:
+  cross_platform_build:
+    strategy:
+      matrix:
+        platform:
+          - target: aarch64-unknown-linux-musl
+          - target: arm-unknown-linux-musleabihf
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-      ####################################
-      ## Build binaries for release page #
-      ####################################
-      
       # Install stable rust, and associated tools
       - name: install rust
         uses: dtolnay/rust-toolchain@stable
-
-      # Rust caching
-      - name: Rust cache
-        uses: swatinem/rust-cache@v2
 
       # Install cross-rs
       - name: install cross
         run: cargo install cross --git https://github.com/cross-rs/cross
 
-      # Build for linux aarch64, aka 64 bit pi 4
-      - name: build aarch64-unknown-linux-musl
-        run: cross build --target aarch64-unknown-linux-musl --release
-      # Compress ouput into tar
-      - name: compress aarch64 binary
-        run: tar -C target/aarch64-unknown-linux-musl/release -czf ./leafcast_linux_aarch64.tar.gz leafcast
+      # Set env's
+      - name: set names
+        run: |
+              translate_platform() { case "$1" in aarch64-unknown-linux-musl) echo "aarch64.tar.gz";; arm-unknown-linux-musleabihf) echo "armv6.tar.gz";; *) echo "Error: Unsupported platform $1"; exit 1;; esac; }
+              target_platform="${{ matrix.platform.target }}"
+              output_name=$(translate_platform "$target_platform")
+              echo "TARGET_OUTPUT_NAME=${output_name}" >> $GITHUB_ENV
+              echo "TARGET_PLATFORM=${target_platform}" >> $GITHUB_ENV
+     
+      # Build binary
+      - name: build
+        run: cross build --target "${TARGET_PLATFORM}" --release
+              
+      # Compress, rename, and move
+      - name: compress
+        run: tar -C "target/${TARGET_PLATFORM}/release" -czf "./leafcast_${TARGET_OUTPUT_NAME}" leafcast
 
-      # Build for linux armv6, aka 32 bit pi zero w
-      - name: build arm-unknown-linux-musleabihf
-        run: cross build --target arm-unknown-linux-musleabihf --release
-      # Compress ouput into tar
-      - name: compress armv6 binary
-        run: tar -C target/arm-unknown-linux-musleabihf/release -czf ./leafcast_linux_armv6.tar.gz leafcast
-
-      ###################
-      ## Create release #
-      ###################
-
-      - name: Release
-        uses: softprops/action-gh-release@v1
+      # Upload output for release page
+      - name: Upload Artifacts
+        uses: actions/upload-artifact@v3
         with:
-          tag_name: ${{ github.ref }}
+          if-no-files-found: error
+          name: ${{ env.TARGET_PLATFORM }}
+          path: leafcast_${{ env.TARGET_OUTPUT_NAME }}
+          retention-days: 1
+
+  ###################
+  ## Create release #
+  ###################
+
+  create_release:
+    needs: [cross_platform_build]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup | Artifacts
+        uses: actions/download-artifact@v3
+
+      - name: Update Release
+        uses: ncipollo/release-action@v1.12.0
+        with:
+          makeLatest: true
           name: ${{ github.ref_name }}
-          body_path: ".github/release-body.md"
-          draft: false
-          files: |
-             leafcast_linux_aarch64.tar.gz
-             leafcast_linux_armv6.tar.gz
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          tag: ${{ github.ref }}
+          bodyFile: ".github/release-body.md"
+          token: ${{ secrets.GITHUB_TOKEN }}
+          artifacts: |
+            **/leafcast_*.tar.gz
