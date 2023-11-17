@@ -5,7 +5,19 @@ edition = "2021"
 authors = ["Jack Wills <email@mrjackwills.com>"]
 description = "leafcast pi client"
 
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+[lints.rust]
+unsafe_code = "forbid"
+
+[lints.clippy]
+unused_async = "warn"
+unwrap_used = "warn"
+expect_used = "warn"
+pedantic = "warn"
+nursery = "warn"
+todo = "warn"
+module_name_repetitions = "allow"
+doc_markdown= "allow"
+similar_names = "allow"
 
 [dependencies]
 clap={version="4.4", features = ["derive", "unicode"] }
