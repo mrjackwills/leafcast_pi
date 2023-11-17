@@ -6,8 +6,7 @@ RUN printf "alias cls='clear'\nalias ll='ls -l --human-readable --color=auto --g
 ENV PATH="/home/vscode/.cargo/bin:${PATH}"
 
 RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
-	&& apt-get -y install --no-install-recommends build-essential pkg-config libssl-dev
+	&& apt-get -y install --no-install-recommends build-essential pkg-config nmap
 
 USER vscode
-RUN curl --proto '=https' --tlsv1.2 -sSf curl https://sh.rustup.rs | sh -s -- -y
-# RUN rustup target add x86_64-unknown-linux-musl
+RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
