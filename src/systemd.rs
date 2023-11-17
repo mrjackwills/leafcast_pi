@@ -131,7 +131,7 @@ fn install_service(app_envs: &AppEnv) -> Result<(), AppError> {
         info!("Change logs ownership");
         let logs_path = format!("{}/{}", app_envs.location_log, LOGS_NAME);
         Command::new(CHOWN)
-            .args([&format!("{APP_NAME}:{APP_NAME}"), &logs_path])
+            .args([&format!("{user_name}:{user_name}"), &logs_path])
             .output()?;
 
         info!("Start service");

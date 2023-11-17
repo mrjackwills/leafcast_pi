@@ -1,11 +1,23 @@
 [package]
 name = "leafcast"
-version = "0.2.7"
+version = "0.2.8"
 edition = "2021"
 authors = ["Jack Wills <email@mrjackwills.com>"]
 description = "leafcast pi client"
 
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+[lints.rust]
+unsafe_code = "forbid"
+
+[lints.clippy]
+unused_async = "warn"
+unwrap_used = "warn"
+expect_used = "warn"
+pedantic = "warn"
+nursery = "warn"
+todo = "warn"
+module_name_repetitions = "allow"
+doc_markdown= "allow"
+similar_names = "allow"
 
 [dependencies]
 clap={version="4.4", features = ["derive", "unicode"] }
@@ -21,7 +33,7 @@ sudo = "0.6"
 thiserror = "1.0"
 time = {version="0.3", features=["local-offset", "macros"]}
 time-tz = "2.0"
-tokio = {version ="1.32", features=["full"]}
+tokio = {version ="1.34", features=["full"]}
 tokio-tungstenite={version= "0.20", features = ["rustls-tls-native-roots"]}
 tracing = "0.1"
 tracing-appender = "0.2"
