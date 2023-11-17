@@ -41,7 +41,7 @@ impl FontName {
 
     #[allow(clippy::too_many_lines)]
     const fn get_block() -> &'static str {
-        r#"flf2a$ 7 7 13 0 7 0 64 0
+        r"flf2a$ 7 7 13 0 7 0 64 0
     Font Author: ?
     
     More Info:
@@ -762,7 +762,7 @@ impl FontName {
     @
     @
     @
-    @@"#
+    @@"
     }
 
     #[allow(clippy::too_many_lines)]
