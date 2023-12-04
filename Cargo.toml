@@ -21,7 +21,7 @@ similar_names = "allow"
 
 [dependencies]
 clap={version="4.4", features = ["derive", "unicode"] }
-data-encoding = "2.4"
+data-encoding = "2.5"
 dotenvy = "0.15"
 figlet-rs = "0.1"
 futures-util = "0.3"
