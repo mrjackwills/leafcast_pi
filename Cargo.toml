@@ -1,6 +1,6 @@
 [package]
 name = "leafcast"
-version = "0.2.9"
+version = "0.2.10"
 edition = "2021"
 authors = ["Jack Wills <email@mrjackwills.com>"]
 description = "leafcast pi client"
