@@ -7,7 +7,7 @@ jobs:
   cross_platform_build:
     strategy:
       matrix:
-        platform:
+        include:
           - target: aarch64-unknown-linux-musl
             output_name: linux_aarch64.tar.gz
 

@@ -1,8 +1,14 @@
+# <a href='https://github.com/mrjackwills/leafcast_pi/releases/tag/v0.2.11'>v0.2.11</a>
+### 2024-04-01
+
+### Chores
++ GitHub workflow matrix,[c5b937cc](https://github.com/mrjackwills/leafcast_pi/commit/c5b937cc4623a549400015cfe321d5b9eb0f2b1c)
+
 # <a href='https://github.com/mrjackwills/leafcast_pi/releases/tag/v0.2.10'>v0.2.10</a>
 ### 2024-04-01
 
 ### Chores
-+ GitHub workflow compress,[704b084e](https://github.com/mrjackwills/leafcast_pi/commit/704b084e4c67f0236708003258d23e06b411b464)
++ GitHub workflow compress, [704b084e](https://github.com/mrjackwills/leafcast_pi/commit/704b084e4c67f0236708003258d23e06b411b464)
 
 # <a href='https://github.com/mrjackwills/leafcast_pi/releases/tag/v0.2.9'>v0.2.9</a>
 ### 2024-04-01
