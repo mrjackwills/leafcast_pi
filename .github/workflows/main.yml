@@ -32,10 +32,9 @@ jobs:
         run: cross build --target ${{ matrix.target }}  --release
 
       # Compress the output
-      - name: compress linux
-        if: matrix.target != 'x86_64-pc-windows-gnu'
+      - name: compress
         run: |
-          tar -C "target/${{ matrix.target }}/release" -czf "./oxker_${{ matrix.output_name }}" oxker
+          tar -C "target/${{ matrix.target }}/release" -czf "./leafcast_${{ matrix.output_name }}" leafcast
 
       # Upload output for release page
       - name: Upload Artifacts
