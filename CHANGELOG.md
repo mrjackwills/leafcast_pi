@@ -1,3 +1,6 @@
+### Chores
++ dependencies updated, [5f346b4594e0b49f347d6cc0a9d141dac25372b8]
+
 # <a href='https://github.com/mrjackwills/leafcast_pi/releases/tag/v0.2.11'>v0.2.11</a>
 ### 2024-04-01
 
