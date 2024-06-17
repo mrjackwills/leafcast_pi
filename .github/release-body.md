@@ -1,6 +1,6 @@
-### 2024-05-07
+### 2024-06-17
 
 ### Chores
-+ dependencies updated, [5f346b4594e0b49f347d6cc0a9d141dac25372b8]
++ dependencies updated, [23a1e059aa4999343b8426a483bd8fc23e93211f]
 
 see <a href='https://github.com/mrjackwills/leafcast_pi/blob/main/CHANGELOG.md'>CHANGELOG.md</a> for more details
