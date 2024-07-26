@@ -1,7 +1,10 @@
+# <a href='https://github.com/mrjackwills/leafcast_pi/releases/tag/v0.2.14'>v0.2.14</a>
+### 2024-07-26
+
 ### Chores
-+ .devcontainer updated, [2aa60db77adba5ef71ad144e949468e44f1de3ed]
-+ Rust 1.80 linting, [6a9bb6b6284d22eaa83f8db9d503cf4e7d375fc9]
-+ dependencies updated, [0347bcc1dac78ec80a473e1912cf0b7e40e4ce6f]
++ .devcontainer updated,[2aa60db7](https://github.com/mrjackwills/leafcast_pi/commit/2aa60db77adba5ef71ad144e949468e44f1de3ed)
++ Rust 1.80 linting,[6a9bb6b6](https://github.com/mrjackwills/leafcast_pi/commit/6a9bb6b6284d22eaa83f8db9d503cf4e7d375fc9)
++ dependencies updated,[0347bcc1](https://github.com/mrjackwills/leafcast_pi/commit/0347bcc1dac78ec80a473e1912cf0b7e40e4ce6f)
 
 # <a href='https://github.com/mrjackwills/leafcast_pi/releases/tag/v0.2.13'>v0.2.13</a>
 ### 2024-06-17
