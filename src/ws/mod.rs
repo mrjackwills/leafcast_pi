@@ -32,7 +32,7 @@ impl AutoClose {
         if let Some(handle) = self.0.as_ref() {
             handle.abort();
         };
-        let mut ws_sender = ws_sender.clone();
+        let ws_sender = ws_sender.clone();
         self.0 = Some(tokio::spawn(async move {
             tokio::time::sleep(std::time::Duration::from_secs(40)).await;
             ws_sender.close().await;
@@ -41,13 +41,13 @@ impl AutoClose {
 }
 
 /// Handle each incoming ws message
-async fn incoming_ws_message(mut reader: WSReader, mut ws_sender: WSSender) {
+async fn incoming_ws_message(mut reader: WSReader, ws_sender: WSSender) {
     let mut auto_close = AutoClose::default();
     auto_close.on_ping(&ws_sender);
     while let Ok(Some(message)) = reader.try_next().await {
         match message {
             Message::Text(message) => {
-                let mut ws_sender = ws_sender.clone();
+                let ws_sender = ws_sender.clone();
                 tokio::spawn(async move {
                     ws_sender.on_text(message).await;
                 });

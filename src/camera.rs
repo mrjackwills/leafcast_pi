@@ -183,7 +183,7 @@ impl Camera {
     }
 
     /// Save the photo to disk
-    pub async fn save_to_disk(&mut self, photo: Vec<u8>) {
+    pub async fn save_to_disk(&self, photo: Vec<u8>) {
         let date_time =
             OffsetDateTime::from(self.get_timestamp()).to_offset(self.timezone.get_offset());
         let file_name = format!(

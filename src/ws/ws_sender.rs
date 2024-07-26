@@ -42,7 +42,7 @@ impl WSSender {
     }
 
     /// Handle text message, in this program they will all be json text
-    pub async fn on_text(&mut self, message: String) {
+    pub async fn on_text(&self, message: String) {
         if let Some(data) = to_struct(&message) {
             match data {
                 MessageValues::Invalid(error) => error!("{:?}", error),
@@ -92,13 +92,13 @@ impl WSSender {
 
     #[allow(unused)]
     /// restart application by force quitting, assuming running as service or in an auto-restart container
-    async fn restart(&mut self) {
+    async fn restart(&self) {
         self.close().await;
         process::exit(0);
     }
 
     /// Send a message to the socket
-    async fn send_ws_response(&mut self, response: Response, unique: String, cache: Option<bool>) {
+    async fn send_ws_response(&self, response: Response, unique: String, cache: Option<bool>) {
         match self
             .writer
             .lock()
@@ -115,7 +115,7 @@ impl WSSender {
     }
 
     /// close connection, uses a 2 second timeout
-    pub async fn close(&mut self) {
+    pub async fn close(&self) {
         if let Ok(close) = tokio::time::timeout(
             std::time::Duration::from_secs(2),
             self.writer.lock().await.close(),
