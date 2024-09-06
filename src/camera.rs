@@ -117,7 +117,6 @@ impl Camera {
 
     /// Convert a given u8 slice to a webp, update self info
     /// Will execute the conversion on a spawn blocking tokio thread
-    #[allow(clippy::cognitive_complexity)]
     async fn convert_to_webp(&mut self, buffer: &[u8]) {
         let now = Instant::now();
         if let Ok(mut image) = image::load_from_memory_with_format(buffer, image::ImageFormat::Jpeg)

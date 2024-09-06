@@ -1,4 +1,4 @@
-#[allow(unused)]
+#[expect(unused)]
 pub enum Color {
     Blue,
     BgRed,
@@ -21,7 +21,7 @@ impl Color {
     }
 }
 
-#[allow(unused)]
+#[expect(unused)]
 pub enum FontName {
     Block,
     Colossal,
@@ -39,7 +39,7 @@ impl FontName {
         }
     }
 
-    #[allow(clippy::too_many_lines)]
+    #[expect(clippy::too_many_lines)]
     const fn get_block() -> &'static str {
         r"flf2a$ 7 7 13 0 7 0 64 0
     Font Author: ?
@@ -765,7 +765,7 @@ impl FontName {
     @@"
     }
 
-    #[allow(clippy::too_many_lines)]
+    #[expect(clippy::too_many_lines)]
     const fn get_roman() -> &'static str {
         r#"flf2a$ 10 10 30 -1 7
 Roman by Nick Miners N.M.Miners@durham.ac.uk
@@ -1797,7 +1797,7 @@ o888o Y8' $#
           $#"#
     }
 
-    #[allow(clippy::too_many_lines)]
+    #[expect(clippy::too_many_lines)]
     const fn get_colossal() -> &'static str {
         r#"flf2a$ 11 8 20 32 13
 Colossal.flf (Jonathon - jon@mq.edu.au)
@@ -2938,7 +2938,7 @@ d88" "88b$ @
 "#
     }
 
-    #[allow(clippy::too_many_lines)]
+    #[expect(clippy::too_many_lines)]
     const fn get_small() -> &'static str {
         r"flf2a$ 5 4 13 15 10 0 22415
 Small by Glenn Chappell 4/93 -- based on Standard
