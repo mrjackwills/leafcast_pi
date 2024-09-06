@@ -69,9 +69,10 @@ pub struct AppEnv {
 
 impl AppEnv {
     fn check_file_exists(filename: String) -> Result<String, AppError> {
-        match std::fs::metadata(&filename) {
-            Ok(_) => Ok(filename),
-            Err(_) => Err(AppError::FileNotFound(filename)),
+        if std::fs::exists(&filename)? {
+            Ok(filename)
+        } else {
+            Err(AppError::FileNotFound(filename))
         }
     }
 
@@ -162,7 +163,7 @@ impl AppEnv {
 ///
 /// cargo watch -q -c -w src/ -x 'test env_ -- --nocapture'
 #[cfg(test)]
-#[allow(clippy::unwrap_used)]
+#[expect(clippy::unwrap_used)]
 mod tests {
     use super::*;
 

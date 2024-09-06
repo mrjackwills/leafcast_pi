@@ -76,7 +76,6 @@ impl Intro {
 ///
 /// cargo watch -q -c -w src/ -x 'test word_art -- --nocapture'
 #[cfg(test)]
-#[allow(clippy::unwrap_used)]
 mod tests {
     use crate::app_env::{EnvTimeZone, Rotation};
 

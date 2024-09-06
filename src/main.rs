@@ -1,6 +1,3 @@
-// Only allow when debugging
-// #![allow(unused)]
-
 mod app_env;
 mod app_error;
 mod camera;

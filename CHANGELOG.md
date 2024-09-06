@@ -1,3 +1,14 @@
+# <a href='https://github.com/mrjackwills/leafcast_pi/releases/tag/v0.2.15'>v0.2.15</a>
+### 2024-09-06
+
+### Chores
++ Rust 1.81.0 linting,[f61fa2d5](https://github.com/mrjackwills/leafcast_pi/commit/f61fa2d5791e2bad4752fdcf2be59be218596680)
++ .devcontainer updated,[e2884870](https://github.com/mrjackwills/leafcast_pi/commit/e28848708c077874f6f9c7b91003eda04760d2c1)
++ dependencies updated,[81b18738](https://github.com/mrjackwills/leafcast_pi/commit/81b187385240706b6e1fda03ea3d6e307faacebc)
+
+### Features
++ use fs::exists for AppEnv,[b1aa7a7a](https://github.com/mrjackwills/leafcast_pi/commit/b1aa7a7a0a0446d1461b9f10e79cf54885649a89)
+
 # <a href='https://github.com/mrjackwills/leafcast_pi/releases/tag/v0.2.14'>v0.2.14</a>
 ### 2024-07-26
 
