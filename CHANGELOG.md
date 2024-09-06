@@ -3,6 +3,9 @@
 + .devcontainer updated, [e28848708c077874f6f9c7b91003eda04760d2c1]
 + dependencies updated, [81b187385240706b6e1fda03ea3d6e307faacebc]
 
+### Features
++ use fs::exists for AppEnv, [b1aa7a7a0a0446d1461b9f10e79cf54885649a89]
+
 # <a href='https://github.com/mrjackwills/leafcast_pi/releases/tag/v0.2.14'>v0.2.14</a>
 ### 2024-07-26
 
