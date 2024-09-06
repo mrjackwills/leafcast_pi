@@ -1,8 +1,11 @@
-### 2024-07-26
+### 2024-09-06
 
 ### Chores
-+ .devcontainer updated, [2aa60db77adba5ef71ad144e949468e44f1de3ed]
-+ Rust 1.80 linting, [6a9bb6b6284d22eaa83f8db9d503cf4e7d375fc9]
-+ dependencies updated, [0347bcc1dac78ec80a473e1912cf0b7e40e4ce6f]
++ Rust 1.81.0 linting, [f61fa2d5791e2bad4752fdcf2be59be218596680]
++ .devcontainer updated, [e28848708c077874f6f9c7b91003eda04760d2c1]
++ dependencies updated, [81b187385240706b6e1fda03ea3d6e307faacebc]
+
+### Features
++ use fs::exists for AppEnv, [b1aa7a7a0a0446d1461b9f10e79cf54885649a89]
 
 see <a href='https://github.com/mrjackwills/leafcast_pi/blob/main/CHANGELOG.md'>CHANGELOG.md</a> for more details
