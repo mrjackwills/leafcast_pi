@@ -1,11 +1,12 @@
-### 2024-09-06
+### 2024-10-19
 
 ### Chores
-+ Rust 1.81.0 linting, [f61fa2d5791e2bad4752fdcf2be59be218596680]
-+ .devcontainer updated, [e28848708c077874f6f9c7b91003eda04760d2c1]
-+ dependencies updated, [81b187385240706b6e1fda03ea3d6e307faacebc]
++ Rust 1.82.0 linting, [8c333d2012fe8d39d2e3fc5cb3667a183c83b350]
++ dependencies updated, [3658f16b297cc5b7ef8f8e8d4b0f8be2583a0662]
++ .devcontainer updated, [d9c1f650f269f237bf5752dbc23a3ad42c04d20d]
++ create_release.sh updated, [028f41d994991b435d1ca2cc2236113fe2cf2da0]
 
 ### Features
-+ use fs::exists for AppEnv, [b1aa7a7a0a0446d1461b9f10e79cf54885649a89]
++ S! & C! macros, [59594923488b923dbe0f0e2d0bf08d8688fc7d9e]
 
 see <a href='https://github.com/mrjackwills/leafcast_pi/blob/main/CHANGELOG.md'>CHANGELOG.md</a> for more details
