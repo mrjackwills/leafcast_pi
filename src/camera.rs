@@ -1,4 +1,7 @@
-use crate::app_env::{AppEnv, EnvTimeZone};
+use crate::{
+    app_env::{AppEnv, EnvTimeZone},
+    C,
+};
 use image::imageops::FilterType;
 use std::{
     io::Cursor,
@@ -66,8 +69,8 @@ impl Camera {
             image_timestamp: SystemTime::now(),
             file_size: FileSize::default(),
             rotation: app_envs.rotation.to_string(),
-            timezone: app_envs.timezone.clone(),
-            location_images: app_envs.location_images.clone(),
+            timezone: C!(app_envs.timezone),
+            location_images: C!(app_envs.location_images),
         };
         let photo_buffer = camera.photograph().await;
         camera.convert_to_webp(&photo_buffer).await;

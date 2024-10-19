@@ -1,6 +1,6 @@
 [package]
 name = "leafcast"
-version = "0.2.15"
+version = "0.2.16"
 edition = "2021"
 authors = ["Jack Wills <email@mrjackwills.com>"]
 description = "leafcast pi client"
@@ -39,7 +39,7 @@ thiserror = "1.0"
 time = { version = "0.3", features = ["local-offset", "macros"] }
 time-tz = "2.0"
 tokio = { version = "1.40", features = ["full"] }
-tokio-tungstenite = { version = "0.23", features = ["rustls-tls-native-roots"] }
+tokio-tungstenite = { version = "0.24", features = ["rustls-tls-native-roots"] }
 tracing = "0.1"
 tracing-appender = "0.2"
 tracing-subscriber = { version = "0.3", features = ["json"] }

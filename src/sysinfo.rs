@@ -3,7 +3,7 @@ use std::time::Instant;
 use serde::{Deserialize, Serialize};
 use tokio::fs::read_to_string;
 
-use crate::{app_env::AppEnv, app_error::AppError};
+use crate::{app_env::AppEnv, app_error::AppError, C, S};
 
 #[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct SysInfo {
@@ -38,10 +38,10 @@ impl SysInfo {
     }
 
     async fn get_ip(app_envs: &AppEnv) -> String {
-        let na = String::from("N/A");
+        let na = S!("N/A");
         let ip = read_to_string(&app_envs.location_ip_address)
             .await
-            .unwrap_or_else(|_| na.clone());
+            .unwrap_or_else(|_| C!(na));
         let output = if ip.len() > 1 {
             ip.trim().to_owned()
         } else {
@@ -85,18 +85,18 @@ mod tests {
     use super::*;
 
     fn gen_app_env(location_ip_address: String) -> AppEnv {
-        let na = String::from("na");
+        let na = S!("na");
         AppEnv {
-            location_images: String::from("photos"),
+            location_images: S!("photos"),
             location_ip_address,
-            location_log: na.clone(),
+            location_log: C!(na),
             log_level: tracing::Level::INFO,
             rotation: Rotation::Zero,
             start_time: SystemTime::now(),
             timezone: EnvTimeZone::new("America/New_York"),
-            ws_address: na.clone(),
-            ws_apikey: na.clone(),
-            ws_password: na.clone(),
+            ws_address: C!(na),
+            ws_apikey: C!(na),
+            ws_password: C!(na),
             ws_token_address: na,
         }
     }
@@ -104,7 +104,7 @@ mod tests {
     #[tokio::test]
     async fn sysinfo_getuptime_ok() {
         // FIXTURES
-        gen_app_env(String::from("ip.addr"));
+        gen_app_env(S!("ip.addr"));
 
         // ACTIONS
         let result = SysInfo::get_uptime().await;
@@ -117,7 +117,7 @@ mod tests {
     #[tokio::test]
     async fn sysinfo_get_ip_na() {
         // FIXTURES
-        let app_envs = gen_app_env(String::from("na"));
+        let app_envs = gen_app_env(S!("na"));
 
         // ACTIONS
         let result = SysInfo::get_ip(&app_envs).await;
@@ -129,7 +129,7 @@ mod tests {
     #[tokio::test]
     async fn sysinfo_get_ip_ok() {
         // FIXTURES
-        let app_envs = gen_app_env(String::from("ip.addr"));
+        let app_envs = gen_app_env(S!("ip.addr"));
         // ACTIONS
         let result = SysInfo::get_ip(&app_envs).await;
 
@@ -140,7 +140,7 @@ mod tests {
     #[tokio::test]
     async fn sysinfo_get_sysinfo_ok() {
         // FIXTURES
-        let app_envs = gen_app_env(String::from("ip.addr"));
+        let app_envs = gen_app_env(S!("ip.addr"));
         tokio::time::sleep(std::time::Duration::from_secs(1)).await;
 
         let now = Instant::now();

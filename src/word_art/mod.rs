@@ -1,4 +1,4 @@
-use crate::app_env::AppEnv;
+use crate::{app_env::AppEnv, S};
 use std::fmt::Write;
 
 mod font;
@@ -10,16 +10,16 @@ const RESET: &str = "\x1b[0m";
 
 /// Convert input string to ASCII art
 fn create_art(input: &str, fontname: FontName) -> String {
-    FIGfont::from_content(FontName::get(fontname)).map_or(String::new(), |font| {
+    FIGfont::from_content(FontName::get(fontname)).map_or(S!(), |font| {
         let figure = font.convert(input);
-        figure.map_or(String::new(), |text| text.to_string())
+        figure.map_or(S!(), |text| text.to_string())
     })
 }
 
 /// Add color to a given string
 fn paint_text(text: &str, color: Color) -> String {
     let tint = Color::get(color);
-    let painted = text.lines().fold(String::new(), |mut output, i| {
+    let painted = text.lines().fold(S!(), |mut output, i| {
         writeln!(output, "{tint}{i}").ok();
         output
     });
@@ -77,25 +77,28 @@ impl Intro {
 /// cargo watch -q -c -w src/ -x 'test word_art -- --nocapture'
 #[cfg(test)]
 mod tests {
-    use crate::app_env::{EnvTimeZone, Rotation};
+    use crate::{
+        app_env::{EnvTimeZone, Rotation},
+        C,
+    };
 
     use super::*;
     use std::time::SystemTime;
 
     #[test]
     fn word_art_display_intro_trace() {
-        let na = String::from("na");
+        let na = S!("na");
         let args = AppEnv {
-            location_images: na.clone(),
-            location_ip_address: na.clone(),
-            location_log: na.clone(),
+            location_images: C!(na),
+            location_ip_address: C!(na),
+            location_log: C!(na),
             log_level: tracing::Level::TRACE,
             rotation: Rotation::Zero,
             start_time: SystemTime::now(),
-            timezone: EnvTimeZone::new(String::new()),
-            ws_address: na.clone(),
-            ws_apikey: na.clone(),
-            ws_password: na.clone(),
+            timezone: EnvTimeZone::new(S!()),
+            ws_address: C!(na),
+            ws_apikey: C!(na),
+            ws_password: C!(na),
             ws_token_address: na,
         };
 
@@ -106,18 +109,18 @@ mod tests {
 
     #[test]
     fn word_art_display_intro_debug() {
-        let na = String::from("na");
+        let na = S!("na");
         let args = AppEnv {
-            location_images: na.clone(),
-            location_ip_address: na.clone(),
-            location_log: na.clone(),
+            location_images: C!(na),
+            location_ip_address: C!(na),
+            location_log: C!(na),
             log_level: tracing::Level::DEBUG,
             rotation: Rotation::Zero,
             start_time: SystemTime::now(),
-            timezone: EnvTimeZone::new(String::new()),
-            ws_address: na.clone(),
-            ws_apikey: na.clone(),
-            ws_password: na.clone(),
+            timezone: EnvTimeZone::new(S!()),
+            ws_address: C!(na),
+            ws_apikey: C!(na),
+            ws_password: C!(na),
             ws_token_address: na,
         };
 
@@ -128,18 +131,18 @@ mod tests {
 
     #[test]
     fn word_art_display_intro() {
-        let na = String::from("na");
+        let na = S!("na");
         let args = AppEnv {
-            location_images: na.clone(),
-            location_ip_address: na.clone(),
-            location_log: na.clone(),
+            location_images: C!(na),
+            location_ip_address: C!(na),
+            location_log: C!(na),
             log_level: tracing::Level::INFO,
             rotation: Rotation::Zero,
             start_time: SystemTime::now(),
-            timezone: EnvTimeZone::new(String::new()),
-            ws_address: na.clone(),
-            ws_apikey: na.clone(),
-            ws_password: na.clone(),
+            timezone: EnvTimeZone::new(S!()),
+            ws_address: C!(na),
+            ws_apikey: C!(na),
+            ws_password: C!(na),
             ws_token_address: na,
         };
 

@@ -15,10 +15,6 @@ pub struct CliArgs {
 impl CliArgs {
     /// Parse cli arguments
     pub fn new() -> Self {
-        let args = Self::parse();
-        Self {
-            install: args.install,
-            uninstall: args.uninstall,
-        }
+        Self::parse()
     }
 }
