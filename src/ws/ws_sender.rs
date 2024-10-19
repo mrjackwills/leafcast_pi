@@ -11,6 +11,7 @@ use tokio::sync::Mutex as TokioMutex;
 
 use crate::camera::Camera;
 use crate::sysinfo::SysInfo;
+use crate::C;
 use crate::{
     app_env::AppEnv,
     ws_messages::{to_struct, MessageValues, ParsedMessage, Photo, Response, StructuredResponse},
@@ -34,7 +35,7 @@ impl WSSender {
         writer: Arc<Mutex<WSWriter>>,
     ) -> Self {
         Self {
-            app_envs: app_envs.clone(),
+            app_envs: C!(app_envs),
             camera,
             connected_instant,
             writer,
