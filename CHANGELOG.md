@@ -1,3 +1,12 @@
+# <a href='https://github.com/mrjackwills/leafcast_pi/releases/tag/v0.2.17'>v0.2.17</a>
+### 2024-11-28
+
+### Chores
++ dependencies updated,[801be6f8](https://github.com/mrjackwills/leafcast_pi/commit/801be6f87d755021cbf6bfbe3d462679b16dc498)
+
+### Features
++ spawn open_connection,[323cf4c8](https://github.com/mrjackwills/leafcast_pi/commit/323cf4c8a1804c9167b0a29ecc32802085cb1f68)
+
 # <a href='https://github.com/mrjackwills/leafcast_pi/releases/tag/v0.2.16'>v0.2.16</a>
 ### 2024-10-19
 
