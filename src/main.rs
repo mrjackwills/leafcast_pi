@@ -74,6 +74,6 @@ async fn main() -> Result<(), AppError> {
     Intro::new(&app_envs).show();
     let camera = Arc::new(Mutex::new(Camera::init(&app_envs).await));
     Croner::init(Arc::clone(&camera));
-	tokio::spawn(open_connection(app_envs, camera)).await.ok();
+    tokio::spawn(open_connection(app_envs, camera)).await.ok();
     Ok(())
 }
