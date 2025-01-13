@@ -1,6 +1,9 @@
+# <a href='https://github.com/mrjackwills/leafcast_pi/releases/tag/v0.2.18'>v0.2.18</a>
+### 2025-01-13
+
 ### Chores
-+ dependencies updated, [f30d28c02e8eabf4fd2ad39589fd2f8c6798a723]
-+ chore: Rust 1.84 linting, [c0f3c64050f94be443ae49b6c7b560afc3dd7233]
++ dependencies updated,[f30d28c0](https://github.com/mrjackwills/leafcast_pi/commit/f30d28c02e8eabf4fd2ad39589fd2f8c6798a723)
++ chore: Rust 1.84 linting,[c0f3c640](https://github.com/mrjackwills/leafcast_pi/commit/c0f3c64050f94be443ae49b6c7b560afc3dd7233)
 
 # <a href='https://github.com/mrjackwills/leafcast_pi/releases/tag/v0.2.17'>v0.2.17</a>
 ### 2024-11-28
