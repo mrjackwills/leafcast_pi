@@ -25,8 +25,7 @@ impl SysInfo {
 
         while let Some(file) = entry.next_entry().await? {
             if std::path::Path::new(&file.path())
-                .extension()
-                .map_or(false, |ext| ext.eq_ignore_ascii_case("jpg"))
+                .extension().is_some_and(|ext| ext.eq_ignore_ascii_case("jpg"))
             {
                 {
                     total_file_size += file.metadata().await?.len();
