@@ -5,16 +5,16 @@ mod ws_sender;
 use connect::ws_upgrade;
 use connection_details::ConnectionDetails;
 use futures_util::{
+    StreamExt, TryStreamExt,
     lock::Mutex,
     stream::{SplitSink, SplitStream},
-    StreamExt, TryStreamExt,
 };
 use std::sync::Arc;
 use tokio::{net::TcpStream, sync::Mutex as TokioMutex, task::JoinHandle};
-use tokio_tungstenite::{self, tungstenite::Message, MaybeTlsStream, WebSocketStream};
+use tokio_tungstenite::{self, MaybeTlsStream, WebSocketStream, tungstenite::Message};
 use tracing::{error, info};
 
-use crate::{app_env::AppEnv, camera::Camera, C};
+use crate::{C, app_env::AppEnv, camera::Camera};
 
 use ws_sender::WSSender;
 

@@ -3,7 +3,7 @@ use std::time::Instant;
 use serde::{Deserialize, Serialize};
 use tokio::fs::read_to_string;
 
-use crate::{app_env::AppEnv, app_error::AppError, C, S};
+use crate::{C, S, app_env::AppEnv, app_error::AppError};
 
 #[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct SysInfo {

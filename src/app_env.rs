@@ -1,8 +1,8 @@
 use std::{collections::HashMap, env, fmt, time::SystemTime};
 use time::UtcOffset;
-use time_tz::{timezones, Offset, TimeZone};
+use time_tz::{Offset, TimeZone, timezones};
 
-use crate::{app_error::AppError, S};
+use crate::{S, app_error::AppError};
 
 type EnvHashMap = HashMap<String, String>;
 

@@ -1,6 +1,6 @@
 use crate::app_env::AppEnv;
 use crate::parse_cli::CliArgs;
-use crate::{app_error::AppError, LOGS_NAME};
+use crate::{LOGS_NAME, app_error::AppError};
 use std::{env, fs, io::Write, path::Path, process::Command};
 use tracing::{error, info};
 
