@@ -1,4 +1,4 @@
-use crate::{app_env::AppEnv, S};
+use crate::{S, app_env::AppEnv};
 use std::fmt::Write;
 
 mod font;
@@ -78,8 +78,8 @@ impl Intro {
 #[cfg(test)]
 mod tests {
     use crate::{
-        app_env::{EnvTimeZone, Rotation},
         C,
+        app_env::{EnvTimeZone, Rotation},
     };
 
     use super::*;
