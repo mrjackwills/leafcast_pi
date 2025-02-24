@@ -77,10 +77,13 @@ impl SysInfo {
 //
 /// cargo watch -q -c -w src/ -x 'test sysinfo -- --test-threads=1 --nocapture'
 #[cfg(test)]
+#[allow(clippy::unwrap_used)]
 mod tests {
     use std::time::SystemTime;
 
-    use crate::app_env::{EnvTimeZone, Rotation};
+    use jiff::tz::TimeZone;
+
+    use crate::app_env::Rotation;
 
     use super::*;
 
@@ -93,7 +96,7 @@ mod tests {
             log_level: tracing::Level::INFO,
             rotation: Rotation::Zero,
             start_time: SystemTime::now(),
-            timezone: EnvTimeZone::new("America/New_York"),
+            timezone: TimeZone::get("America/New_York").unwrap(),
             ws_address: C!(na),
             ws_apikey: C!(na),
             ws_password: C!(na),
