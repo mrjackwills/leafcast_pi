@@ -1,36 +1,10 @@
 use std::{collections::HashMap, env, fmt, time::SystemTime};
-use time::UtcOffset;
-use time_tz::{timezones, Offset, TimeZone};
 
-use crate::{app_error::AppError, S};
+use jiff::tz::TimeZone;
+
+use crate::app_error::AppError;
 
 type EnvHashMap = HashMap<String, String>;
-
-#[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord)]
-pub struct EnvTimeZone(String);
-
-impl EnvTimeZone {
-    pub fn new(x: impl Into<String>) -> Self {
-        let x = x.into();
-        if timezones::get_by_name(&x).is_some() {
-            Self(x)
-        } else {
-            Self(S!("Etc/UTC"))
-        }
-    }
-
-    pub fn get_offset(&self) -> UtcOffset {
-        timezones::get_by_name(&self.0).map_or(UtcOffset::UTC, |tz| {
-            tz.get_offset_utc(&time::OffsetDateTime::now_utc()).to_utc()
-        })
-    }
-}
-
-impl fmt::Display for EnvTimeZone {
-    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        write!(f, "{}", self.0)
-    }
-}
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub enum Rotation {
@@ -60,7 +34,7 @@ pub struct AppEnv {
     pub log_level: tracing::Level,
     pub rotation: Rotation,
     pub start_time: SystemTime,
-    pub timezone: EnvTimeZone,
+    pub timezone: TimeZone,
     pub ws_address: String,
     pub ws_apikey: String,
     pub ws_password: String,
@@ -113,11 +87,10 @@ impl AppEnv {
     }
 
     /// Check that a given timezone is valid, else return UTC
-    fn parse_timezone(map: &EnvHashMap) -> EnvTimeZone {
-        EnvTimeZone::new(
-            map.get("TIMEZONE")
-                .map_or_else(String::new, std::borrow::ToOwned::to_owned),
-        )
+    fn parse_timezone(map: &EnvHashMap) -> TimeZone {
+        map.get("TIMEZONE").map_or(TimeZone::UTC, |s| {
+            jiff::tz::TimeZone::get(s).unwrap_or(TimeZone::UTC)
+        })
     }
 
     /// Load, and parse .env file, return AppEnv
@@ -296,7 +269,7 @@ mod tests {
         let result = AppEnv::parse_timezone(&map);
 
         // CHECK
-        assert_eq!(result.0, "America/New_York");
+        assert_eq!(result.iana_name(), Some("America/New_York"));
 
         let mut map = HashMap::new();
         map.insert(S!("TIMEZONE"), S!("Europe/Berlin"));
@@ -305,7 +278,7 @@ mod tests {
         let result = AppEnv::parse_timezone(&map);
 
         // CHECK
-        assert_eq!(result.0, "Europe/Berlin");
+        assert_eq!(result.iana_name(), Some("Europe/Berlin"));
 
         // FIXTURES
         let map = HashMap::new();
@@ -314,19 +287,19 @@ mod tests {
         let result = AppEnv::parse_timezone(&map);
 
         // CHECK
-        assert_eq!(result.0, "Etc/UTC");
+        assert_eq!(result.iana_name(), Some("UTC"));
     }
 
     #[test]
     fn env_parse_timezone_err() {
         // FIXTURES
         let mut map = HashMap::new();
-        map.insert(S!("TIMEZONE"), S!("america/New_York"));
+        map.insert(S!("TIMEZONE"), S!("america/New__York"));
 
         // ACTION
         let result = AppEnv::parse_timezone(&map);
         // CHECK
-        assert_eq!(result.0, "Etc/UTC");
+        assert_eq!(result.iana_name(), Some("UTC"));
 
         // No timezone present
         // FIXTURES
@@ -334,7 +307,7 @@ mod tests {
         let result = AppEnv::parse_timezone(&map);
 
         // CHECK
-        assert_eq!(result.0, "Etc/UTC");
+        assert_eq!(result.iana_name(), Some("UTC"));
     }
 
     #[test]

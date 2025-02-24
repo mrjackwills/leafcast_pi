@@ -1,3 +1,16 @@
+# <a href='https://github.com/mrjackwills/leafcast_pi/releases/tag/v0.3.0'>v0.3.0</a>
+### 2025-02-24
+
+### Chores
++ create_release.sh updated,[7674ca97](https://github.com/mrjackwills/leafcast_pi/commit/7674ca97e794f93735abcc33a23dd1431a608733)
++ dependencies updated,[639f4fab](https://github.com/mrjackwills/leafcast_pi/commit/639f4fab601a1644252d8665536705b4ec167e5f)
++ .devcontainer updated,[dc24354a](https://github.com/mrjackwills/leafcast_pi/commit/dc24354a743c33b8e1a450893872972002f37c54)
+
+### Features
++ Use Jiff for all time methods,[c84a1459](https://github.com/mrjackwills/leafcast_pi/commit/c84a1459f7030358994a4b20edce01f52c879a64)
++ update to Rust 2024 edition,[4ca48677](https://github.com/mrjackwills/leafcast_pi/commit/4ca48677352503656a220b3eb8869ec4da9efcbb)
+
+
 # <a href='https://github.com/mrjackwills/leafcast_pi/releases/tag/v0.2.18'>v0.2.18</a>
 ### 2025-01-13
 

@@ -1,7 +1,5 @@
 use std::time::{Duration, Instant};
-use time::OffsetDateTime;
 use tokio::time::sleep;
-use tracing::{debug, info};
 
 #[derive(Debug)]
 pub struct ConnectionDetails {
@@ -45,7 +43,7 @@ impl ConnectionDetails {
 
     /// delay the recconnect attempt by x seconds, depedning on ho wmany attempts already made
     pub async fn reconnect_delay(&self) {
-        info!(self.count);
+        tracing::info!(self.count);
         if self.count > 0 {
             sleep(Duration::from_secs(u64::from(self.wait.as_sec()))).await;
         }
@@ -56,8 +54,10 @@ impl ConnectionDetails {
         self.wait = Wait::Short;
         self.count = 0;
         self.connection_instant = Some(Instant::now());
-        let now = OffsetDateTime::now_utc();
-        debug!("{} {}", now.date(), now.time());
+        tracing::debug!(
+            "{}",
+            jiff::Zoned::now().timestamp().strftime("%Y-%m-%d %H:%M:%S")
+        );
     }
 
     pub fn get_connect_instant(&self) -> Instant {

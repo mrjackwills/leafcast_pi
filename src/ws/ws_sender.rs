@@ -1,20 +1,19 @@
 use data_encoding::BASE64;
-use futures_util::lock::Mutex;
 use futures_util::SinkExt;
+use futures_util::lock::Mutex;
 use std::process;
 use std::sync::Arc;
 use std::time::Instant;
-use time::OffsetDateTime;
 use tracing::{error, trace};
 
 use tokio::sync::Mutex as TokioMutex;
 
+use crate::C;
 use crate::camera::Camera;
 use crate::sysinfo::SysInfo;
-use crate::C;
 use crate::{
     app_env::AppEnv,
-    ws_messages::{to_struct, MessageValues, ParsedMessage, Photo, Response, StructuredResponse},
+    ws_messages::{MessageValues, ParsedMessage, Photo, Response, StructuredResponse, to_struct},
 };
 
 use super::WSWriter;
@@ -67,14 +66,16 @@ impl WSSender {
     /// Create a photo response, is the only response this app sends (other than pongs)
     async fn generate_response(&self, photo_buffer: &[u8]) -> Response {
         let camera = self.camera.lock().await;
-        let date_time = OffsetDateTime::from(camera.get_timestamp())
-            .to_offset(self.app_envs.timezone.get_offset());
+        let date_time = camera
+            .get_timestamp()
+            .to_zoned(C!(self.app_envs.timezone))
+            .datetime();
+        // .to_offset(self.app_envs.timezone.get_offset());
         let (size_converted, size_original) = camera.get_sizes();
         drop(camera);
         let connected_at = self.connected_instant;
         let timestamp = format!(
-            "{} {} @ {:0>2}:{:0>2}:{:0>2}",
-            date_time.weekday(),
+            "{} @ {:0>2}:{:0>2}:{:0>2}",
             date_time.date(),
             date_time.hour(),
             date_time.minute(),
