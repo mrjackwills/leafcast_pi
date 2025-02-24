@@ -8,8 +8,6 @@ pub enum AppError {
     IOError(#[from] std::io::Error),
     #[error("missing env: '{0}'")]
     MissingEnv(String),
-    #[error("Time offset error")]
-    Offset(#[from] time::error::ComponentRange),
     #[error("Reqwest Error")]
     Reqwest(#[from] reqwest::Error),
     #[error("Unable to set up tracing")]

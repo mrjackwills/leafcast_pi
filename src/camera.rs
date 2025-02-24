@@ -1,13 +1,7 @@
-use crate::{
-    C,
-    app_env::{AppEnv, EnvTimeZone},
-};
+use crate::{C, app_env::AppEnv};
 use image::imageops::FilterType;
-use std::{
-    io::Cursor,
-    time::{Instant, SystemTime},
-};
-use time::OffsetDateTime;
+use jiff::{Timestamp, tz::TimeZone};
+use std::{io::Cursor, time::Instant};
 use tokio::{fs, process::Command};
 use tracing::{debug, error, info};
 
@@ -54,10 +48,10 @@ impl Dimension {
 #[derive(Debug)]
 pub struct Camera {
     image_webp: Vec<u8>,
-    image_timestamp: SystemTime,
+    image_timestamp: Timestamp,
     file_size: FileSize,
     rotation: String,
-    timezone: EnvTimeZone,
+    timezone: TimeZone,
     location_images: String,
 }
 
@@ -66,7 +60,7 @@ impl Camera {
     pub async fn init(app_envs: &AppEnv) -> Self {
         let mut camera = Self {
             image_webp: vec![],
-            image_timestamp: SystemTime::now(),
+            image_timestamp: jiff::Timestamp::now(),
             file_size: FileSize::default(),
             rotation: app_envs.rotation.to_string(),
             timezone: C!(app_envs.timezone),
@@ -82,7 +76,7 @@ impl Camera {
     async fn photograph(&mut self) -> Vec<u8> {
         info!("Taking photo");
         let dimensions = Dimension::Big.get_dimensions();
-        self.image_timestamp = SystemTime::now();
+        self.image_timestamp = jiff::Timestamp::now();
         let buffer = Command::new("libcamera-still")
             .args([
                 "-q",
@@ -165,7 +159,7 @@ impl Camera {
     }
 
     /// Return the timestamp of the latest image
-    pub const fn get_timestamp(&self) -> SystemTime {
+    pub const fn get_timestamp(&self) -> Timestamp {
         self.image_timestamp
     }
 
@@ -186,8 +180,9 @@ impl Camera {
 
     /// Save the photo to disk
     pub async fn save_to_disk(&self, photo: Vec<u8>) {
-        let date_time =
-            OffsetDateTime::from(self.get_timestamp()).to_offset(self.timezone.get_offset());
+        let date_time = jiff::Timestamp::now()
+            .to_zoned(C!(self.timezone))
+            .datetime();
         let file_name = format!(
             "{}_{:0>2}-{:0>2}-{:0>2}",
             date_time.date(),

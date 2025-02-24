@@ -77,10 +77,9 @@ impl Intro {
 /// cargo watch -q -c -w src/ -x 'test word_art -- --nocapture'
 #[cfg(test)]
 mod tests {
-    use crate::{
-        C,
-        app_env::{EnvTimeZone, Rotation},
-    };
+    use jiff::tz::TimeZone;
+
+    use crate::{C, app_env::Rotation};
 
     use super::*;
     use std::time::SystemTime;
@@ -95,7 +94,7 @@ mod tests {
             log_level: tracing::Level::TRACE,
             rotation: Rotation::Zero,
             start_time: SystemTime::now(),
-            timezone: EnvTimeZone::new(S!()),
+            timezone: TimeZone::UTC,
             ws_address: C!(na),
             ws_apikey: C!(na),
             ws_password: C!(na),
@@ -117,7 +116,7 @@ mod tests {
             log_level: tracing::Level::DEBUG,
             rotation: Rotation::Zero,
             start_time: SystemTime::now(),
-            timezone: EnvTimeZone::new(S!()),
+            timezone: TimeZone::UTC,
             ws_address: C!(na),
             ws_apikey: C!(na),
             ws_password: C!(na),
@@ -139,7 +138,7 @@ mod tests {
             log_level: tracing::Level::INFO,
             rotation: Rotation::Zero,
             start_time: SystemTime::now(),
-            timezone: EnvTimeZone::new(S!()),
+            timezone: TimeZone::UTC,
             ws_address: C!(na),
             ws_apikey: C!(na),
             ws_password: C!(na),
