@@ -1,12 +1,9 @@
-### 2025-02-24
+### 2025-04-07
 
 ### Chores
-+ create_release.sh updated, [7674ca97e794f93735abcc33a23dd1431a608733]
-+ dependencies updated, [639f4fab601a1644252d8665536705b4ec167e5f]
-+ .devcontainer updated, [dc24354a743c33b8e1a450893872972002f37c54]
++ dependencies updated, [6eba9795a35cca811843cebbd206397183683e95]
 
-### Features
-+ Use Jiff for all time methods, [c84a1459f7030358994a4b20edce01f52c879a64]
-+ update to Rust 2024 edition, [4ca48677352503656a220b3eb8869ec4da9efcbb]
+### Refactors
++ Rust 1.86.0 linting, [d5bb16ba4b0c349d0bfc76f62aa491764cd3dbbf]
 
 see <a href='https://github.com/mrjackwills/leafcast_pi/blob/main/CHANGELOG.md'>CHANGELOG.md</a> for more details
