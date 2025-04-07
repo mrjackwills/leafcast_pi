@@ -81,7 +81,7 @@ mod tests {
                 assert_eq!(unique, "unique_hex_string");
             }
             _ => unreachable!("Shouldn't have matched this"),
-        };
+        }
     }
 
     #[test]
@@ -152,7 +152,7 @@ mod tests {
                 assert_eq!(unique, "unique_hex_string");
             }
             _ => unreachable!("Shouldn't have matched this"),
-        };
+        }
     }
 
     #[test]
