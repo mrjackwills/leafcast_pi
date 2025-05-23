@@ -12,8 +12,8 @@ pub enum AppError {
     Reqwest(#[from] reqwest::Error),
     #[error("Unable to set up tracing")]
     Tracing,
-    #[error("WS Connect")]
-    TungsteniteConnect(#[from] tokio_tungstenite::tungstenite::Error),
+    #[error("Ws Connect: '{0}'")]
+    TungsteniteConnect(String),
     #[error("Invalid WS Status Code")]
     WsStatus,
 }
