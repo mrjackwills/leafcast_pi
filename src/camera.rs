@@ -154,8 +154,6 @@ impl Camera {
     }
 
     // store the image as web64 instead of &[u8]
-    /// TODO possibly fixed in next version of clippy
-    #[allow(clippy::missing_const_for_fn)]
     pub fn get_webp(&self) -> &[u8] {
         &self.image_webp
     }
