@@ -42,12 +42,11 @@ impl SysInfo {
         let ip = read_to_string(&app_envs.location_ip_address)
             .await
             .unwrap_or_else(|_| C!(na));
-        let output = if ip.len() > 1 {
+        if ip.len() > 1 {
             ip.trim().to_owned()
         } else {
             na
-        };
-        output
+        }
     }
 
     async fn get_uptime() -> usize {
