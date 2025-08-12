@@ -263,7 +263,7 @@ release_flow() {
 }
 
 main() {
-	cmd=(dialog --backtitle "Choose build option" --radiolist "choose" 14 80 16)
+	cmd=(dialog --backtitle "Choose build option" --keep-tite --radiolist "choose" 14 80 16)
 	options=(
 		1 "build" off
 		2 "test" off
