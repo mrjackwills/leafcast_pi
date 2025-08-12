@@ -117,8 +117,7 @@ impl Camera {
     async fn convert_to_webp(&mut self, buffer: &[u8]) {
         let now = Instant::now();
         if let Ok(mut image) = image::load_from_memory_with_format(buffer, image::ImageFormat::Jpeg)
-        {
-            if let Ok(webp) = tokio::task::spawn_blocking(move || {
+            && let Ok(webp) = tokio::task::spawn_blocking(move || {
                 let dimensions = Dimension::Small.get_dimensions();
                 image = image.resize(dimensions.width, dimensions.height, FilterType::Nearest);
                 debug!("resize took: {}ms", now.elapsed().as_millis());
@@ -143,7 +142,6 @@ impl Camera {
                 self.file_size.converted = webp.len();
                 self.image_webp = webp;
             }
-        }
     }
 
     /// Take a photo, and update self.web with that new photo
