@@ -138,10 +138,10 @@ impl Camera {
                 buf_writer.into_inner()
             })
             .await
-            {
-                self.file_size.converted = webp.len();
-                self.image_webp = webp;
-            }
+        {
+            self.file_size.converted = webp.len();
+            self.image_webp = webp;
+        }
     }
 
     /// Take a photo, and update self.web with that new photo
