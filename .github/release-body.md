@@ -1,9 +1,8 @@
-### 2025-08-12
+### 2025-09-24
 
 ### Chores
-+ create_release.sh updated, [0cdc227e5664852d00985285f38d8f088be2d653]
-+ Rust 1.89.0 linting, [b0cfa682173ec50055d765e8eb594550c7073132]
-+ .devcontainer updated, [9fe8b2adb225b5eae9cb487b9d34c4340cfef4de]
-+ dependencies updated, [4e9c8591cc5660142c7ae3c4fbafa03a17d88e5f]
++ create_release.sh updated, [4347ab9ea92866499f8ff8b9130126683226a7f6]
++ dependencies updated, [760a3bd7fd985747ddcd4463816bdbd5f3f79c8d], [b708ab5061f3939ee55ec370bc6c0f660a8cee6c]
++ GitHub workflow updated, [27e84fb63c147957ea513113d4eeb73191c80aa8], [f5f8b75030c9218dd59ca98b4c5002a6da5adde7]
 
 see <a href='https://github.com/mrjackwills/leafcast_pi/blob/main/CHANGELOG.md'>CHANGELOG.md</a> for more details
