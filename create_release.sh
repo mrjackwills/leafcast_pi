@@ -1,8 +1,8 @@
 #!/bin/bash
 
 # rust create_release
-# v0.6.0
-# 2024-10-19
+# v0.6.3
+# 2025-09-20
 
 STAR_LINE='****************************************'
 CWD=$(pwd)
@@ -173,19 +173,53 @@ cargo_test() {
 }
 
 cargo_clean() {
+	echo -e "${YELLOW}cargo clean${RESET}"
 	cargo clean
 }
 
-# Build output as github action would
-cross_build() {
-	cargo_clean
-	echo -e "\n${GREEN}cross build --target aarch64-unknown-linux-musl --release${RESET}"
+# Check to see if cross is installed - if not then install
+check_cross() {
+	if ! [ -x "$(command -v cross)" ]; then
+		echo -e "${YELLOW}cargo install cross${RESET}"
+		cargo install cross
+	fi
+}
+
+#  Build for linux arm64
+cross_build_aarch64_linux() {
+	check_cross
+	echo -e "${YELLOW}cross build --target aarch64-unknown-linux-musl --release${RESET}"
 	cross build --target aarch64-unknown-linux-musl --release
-	ask_continue
-	cargo_clean
-	echo -e "\n${GREEN}cross build --target arm-unknown-linux-musleabihf --release${RESET}"
+}
+
+# Build for linux armv6
+cross_build_armv6_linux() {
+	check_cross
+	echo -e "${YELLOW}cross build --target arm-unknown-linux-musleabihf --release${RESET}"
 	cross build --target arm-unknown-linux-musleabihf --release
-	ask_continue
+}
+
+# Build for linux armv6
+cargo_build() {
+	check_cross
+	echo -e "${YELLOW}cargo build --release${RESET}"
+	cargo build --release
+}
+
+
+# Build all releases that GitHub workflow would
+# This will download GB's of docker images
+# $1 is 0 or 1, if 1 won't run ask_continue
+cross_cargo_build_all() {
+	if ask_yn "cargo clean"; then
+		cargo_clean
+	fi
+	cargo_build
+	skip_confirm=$1
+	cross_build_armv6_linux
+	[ "$skip_confirm" -ne 1 ] && ask_continue
+	cross_build_aarch64_linux
+	[ "$skip_confirm" -ne 1 ] && ask_continue
 }
 
 # $1 text to colourise
@@ -200,6 +234,46 @@ check_typos() {
 	ask_continue
 }
 
+# Choose build targets
+build_choice() {
+	cmd=(dialog --backtitle "Choose option" --keep-tite --radiolist "choose" 14 80 16)
+	options=(
+		1 "aarch64 musl linux" off
+		2 "armv6 musl linux" off
+		3 "all" off
+		4 "all automatic" off
+	)
+	choices=$("${cmd[@]}" "${options[@]}" 2>&1 >/dev/tty)
+	exitStatus=$?
+	clear
+	if [ $exitStatus -ne 0 ]; then
+		exit
+	fi
+	for choice in $choices; do
+		case $choice in
+		0)
+			exit
+			;;
+		1)
+			cross_build_aarch64_linux
+			exit
+			;;
+		2)
+			cross_build_armv6_linux
+			exit
+			;;
+		3)
+			cross_cargo_build_all 0
+			exit
+			;;
+		4)
+			cross_cargo_build_all 1
+			exit
+			;;
+		esac
+	done
+}
+
 # Full flow to create a new release
 release_flow() {
 	check_typos
@@ -208,7 +282,7 @@ release_flow() {
 	get_git_remote_url
 
 	cargo_test
-	cross_build
+	cross_cargo_build_all 0
 
 	cd "${CWD}" || error_close "Can't find ${CWD}"
 	check_tag
@@ -281,7 +355,7 @@ main() {
 			exit
 			;;
 		1)
-			cross_build
+			build_choice
 			main
 			break
 			;;
