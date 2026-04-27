@@ -21,25 +21,25 @@ doc_markdown = "allow"
 similar_names = "allow"
 
 [dependencies]
-clap = { version = "4.5", features = ["derive", "unicode"] }
-data-encoding = "2.9"
+clap = { version = "4.6", features = ["derive", "unicode"] }
+data-encoding = "2.11"
 dotenvy = "0.15"
-figlet-rs = "0.1"
+figlet-rs = "1.0"
 futures-util = "0.3"
 image = { version = "0.25"}
 jiff = { version = "0.2", features = ["tzdb-bundle-always"] }
-reqwest = { version = "0.12", default-features = false, features = [
+reqwest = { version = "0.13", default-features = false, features = [
 	"brotli",
 	"gzip",
 	"json",
-	"rustls-tls-native-roots",
+	"default-tls",
 ] }
 serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0"
 sudo = "0.6"
 thiserror = "2.0"
-tokio = { version = "1.47", features = ["full"] }
-tokio-tungstenite = { version = "0.27", features = ["rustls-tls-native-roots"] }
+tokio = { version = "1.52", features = ["full"] }
+tokio-tungstenite = { version = "0.29", features = ["rustls-tls-native-roots"] }
 tracing = "0.1"
 tracing-appender = "0.2"
 tracing-subscriber = { version = "0.3", features = ["json"] }
