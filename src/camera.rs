@@ -83,7 +83,7 @@ impl Camera {
                 "95",
                 "-n",
                 "--rotation",
-                &self.rotation.to_string(),
+                &self.rotation.clone(),
                 "--width",
                 &dimensions.width.to_string(),
                 "--height",
