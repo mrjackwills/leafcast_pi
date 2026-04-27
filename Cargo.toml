@@ -1,6 +1,6 @@
 [package]
 name = "leafcast"
-rust-version = "1.89.0"
+rust-version = "1.93.0"
 version = "0.3.4"
 edition = "2024"
 authors = ["Jack Wills <email@mrjackwills.com>"]
