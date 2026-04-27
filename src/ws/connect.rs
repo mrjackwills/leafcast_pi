@@ -26,7 +26,7 @@ struct PostResponse {
 /// Make a https request to get an access token
 async fn get_auth_token(app_envs: &AppEnv) -> Result<String, AppError> {
     Ok(reqwest::Client::builder()
-        .connect_timeout(std::time::Duration::from_millis(5000))
+        .connect_timeout(std::time::Duration::from_secs(5))
         .gzip(true)
         .brotli(true)
         .user_agent(format!(
